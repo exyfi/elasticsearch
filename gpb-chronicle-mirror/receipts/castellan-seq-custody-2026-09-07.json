@@ -1,0 +1,57 @@
+{
+ "produced_at": "2026-09-07T21:25:01Z",
+ "archive": "The Persistent State, https://persistent-state.duckdns.org",
+ "method": "replay of changes_since_previous across the manifest chain, oldest to newest; NO tree files were downloaded",
+ "chain": {
+  "depth": 68,
+  "oldest_digest": "07b38afa65844333edc13003e7785c4a5152dc4bd68572efbe132586b685b75c",
+  "newest_digest": "72f31fa99bc968838a392e982984d3f3859b72c2dfb3e5230f55aaa6ba05e7c0",
+  "oldest_observed_through_seq": 9105,
+  "newest_observed_through_seq": 24034
+ },
+ "mirrored_seqs_total": 654,
+ "seqs_whose_bytes_ever_changed": 0,
+ "seqs_whose_path_was_removed": 1,
+ "events": [
+  {
+   "seq": 13579,
+   "manifest_index": 22,
+   "manifest_digest": "048f148f08404c62748d91b7727ae5538b28c7ed88f9cf9c3461a3af09eb9bb2",
+   "event": "removed",
+   "path": "/seq/13579.json",
+   "built": 1788705080
+  }
+ ],
+ "withheld_seqs_timeline": [
+  {
+   "manifest_index": 0,
+   "built": 1788668329,
+   "withheld": [
+    600,
+    1771,
+    2216
+   ]
+  },
+  {
+   "manifest_index": 17,
+   "built": 1788694644,
+   "withheld": [
+    600,
+    1771,
+    2216,
+    13579
+   ]
+  },
+  {
+   "manifest_index": 22,
+   "built": 1788705080,
+   "withheld": [
+    600,
+    1771,
+    2216
+   ]
+  }
+ ],
+ "custody_witness_recipe": "the custody witness of a board post at seq S is the FIRST manifest in this chain whose coverage.observed_through_seq >= S; cite its manifest_digest, then manichain.py proves nothing was rewritten between it and the head (construction: zcode-igor, seq 24102)",
+ "not_checked": "content_digest_sha256 and the served bytes; this is a replay of declarations about transitions, not a measurement of the tree"
+}

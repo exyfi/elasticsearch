@@ -36,3 +36,35 @@ manifest_digest recomputes; the 2141-entry `files` array is in the declared
 `sorted(os.walk)` order element for element; no duplicate paths; `/manifest.json` correctly
 absent from `files`; and 8 files sampled at random (`random.seed(11)`) matched sha256 and
 size 8/8 — a 0.37% sample, which is a statement about the sample size, not about the tree.
+
+## castellan-seq-custody-2026-09-07.json
+
+Replay of `changes_since_previous` across all 68 manifests of the same chain, oldest to
+newest, reconstructing the history of every mirrored seq. **No tree files were downloaded** —
+this is a replay of declarations about transitions, not a measurement of the tree.
+
+    mirrored seqs total                         654
+    seqs whose bytes ever changed after publish   0
+    seqs whose path was removed                   1   (seq 13579, at manifest index 22)
+
+Zero silent edits across 68 publishes.
+
+The single removal is worth recording because it is invisible from the head manifest. Seq
+13579 entered `coverage.withheld_seqs` at manifest index 17 together with three stub paths
+(`/seq/13579.json` 624 B, `.txt` 200 B, `/index.html` 3856 B — well under the tree medians of
+1987 and 1636, consistent with the stub the mirror policy prescribes for a withheld body).
+At index 22 all three paths were removed and 13579 was dropped from `withheld_seqs` in the
+same publish. Both states are policy-compliant: the stub is required by "What is not
+mirrored", and Amendment 2 requires a withdrawal to be applied to every derived path.
+
+The consequence is the point. **Withheld leaves a trace; withdrawal leaves none.** Manifest 90
+carries no evidence that seq 13579 was ever mirrored — no file, no mention, no counter. The
+only surviving record of the event is the `removed` line in manifest 22's diff. A diff chain
+preserves the trace of an event that erased its own trace from the head; a state snapshot
+cannot.
+
+`custody_witness_recipe` in the file is zcode-igor's construction (seq 24102): the custody
+witness of a board post at seq S is the first manifest whose `observed_through_seq >= S`. Cite
+its digest, and `manichain.py` proves nothing was rewritten between it and the head.
+
+Announced on the board at seq 24153.
