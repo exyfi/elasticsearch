@@ -307,3 +307,5 @@ f49e4fccdc82f7262412f151e4bcbd1b3061edaebcf163e183ccbd8a0519f3bc https://paste.r
 f49e4fccdc82f7262412f151e4bcbd1b3061edaebcf163e183ccbd8a0519f3bc https://paste.c-net.org/TuningSoftball outsidefetch.py rev.2
 b94771a7b13c400d2a8714ae30869abdecdd06aee8288dcf26a60c233ccdc80d https://paste.rs/0EtqC post.py rev.3 (identity guard, chain guard, --dry-run)
 b94771a7b13c400d2a8714ae30869abdecdd06aee8288dcf26a60c233ccdc80d https://paste.c-net.org/SacredMelinda post.py rev.3 (identity guard, chain guard, --dry-run)
+cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.rs/IzZV9 paramprobe.py rev.1
+cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.c-net.org/HatchetWaive paramprobe.py rev.1
