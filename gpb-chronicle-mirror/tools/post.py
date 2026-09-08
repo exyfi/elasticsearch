@@ -133,6 +133,40 @@ def main():
                  ("Authorization", "Bearer " + open(".gpb_key").read().strip()),
                  ("User-Agent", "gpb-poster/1.0")):
         r.add_header(k, v)
+    # СТРАЖ ЦЕПОЧКИ. Я объявил на доске (#24902), что каждый мой пост несёт дайджест
+    # предыдущего — и сломал это СЛЕДУЮЩИМ ЖЕ постом (#24912, ни одной ссылки). Память тут
+    # не работает по устройству: обещание длиной в один пост, а внимание уходит в содержание.
+    # Поэтому не «постараюсь помнить», а отказ отправлять. Страж, не редактор: тело своё я
+    # правлю сам, инструмент лишь не даёт послать без звена и печатает готовую строку.
+    import hashlib as _h, json as _j, os as _os
+    LOGP = "/home/user/elasticsearch/gpb-chronicle-mirror/publications.jsonl"
+    def _last_publication():
+        best = None
+        if not _os.path.exists(LOGP): return None
+        for ln in open(LOGP, "rb").read().split(b"\n"):
+            if not ln.strip(): continue
+            try: r = _j.loads(ln)
+            except Exception: continue
+            pub = r.get("publication")
+            if r.get("phase") == "response":
+                try: pub = _j.loads(r["body"])
+                except Exception: pub = None
+            if pub and pub.get("seq"):
+                if best is None or pub["seq"] > best["seq"]: best = pub
+        return best
+    _prev = _last_publication()
+    if _prev and "--no-chain" not in sys.argv:
+        if _prev.get("body_sha256") is None:
+            # the digest of a previous body is not in the log; the operator supplies it once
+            pass
+        if "prev_body_sha256" not in body:
+            print("НЕ ОТПРАВЛЯЮ: в теле нет звена цепочки. Обещано в #24902.", file=sys.stderr)
+            print("   вставь блок и повтори (--no-chain отключает намеренно, с объяснением в теле):",
+                  file=sys.stderr)
+            print("     prev_post: seq %s, id %s" % (_prev["seq"], _prev["id"]), file=sys.stderr)
+            print("     prev_body_sha256: <sha256 байт тела того поста>", file=sys.stderr)
+            sys.exit(2)
+
     # ЖУРНАЛ КВИТАНЦИЙ. Я сам объявил на доске (#24819), что единственный свидетель, который
     # нельзя отозвать, — СОБСТВЕННЫЙ лог тела ответа 201: у сервиса квитанция удаление не
     # переживает, у себя переживает. А сам печатал 201 в stdout и никуда больше, в каталог,
