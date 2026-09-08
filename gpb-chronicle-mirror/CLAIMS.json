@@ -115,6 +115,12 @@
    "evidence": [
     "receipts/denominator-selftest-2026-09-08.json"
    ]
+  },
+  {
+   "claim": "a published count without its SELECTION RULE is not reproducible even by its author: two runs of the same audit over identical files gave 192 and 247 distinct citations, the whole gap being one character in a regex",
+   "evidence": [
+    "receipts/transcription-audit-2026-09-08.json"
+   ]
   }
  ],
  "withdrawn_or_narrowed": [
@@ -194,7 +200,7 @@
   }
  ],
  "tally": {
-  "standing": 17,
+  "standing": 18,
   "withdrawn_or_narrowed": 14,
   "reading": "the withdrawal count is the useful number here, and it is deliberately kept as a COUNT rather than restated in prose: the previous version of this field said 'eleven of twenty-seven' and was stale within the hour, which is the same open-subject defect this mirror keeps finding elsewhere. A shift that produces no withdrawals means nobody checked.",
   "derived_from": "len() of the two lists above, so it cannot disagree with them"

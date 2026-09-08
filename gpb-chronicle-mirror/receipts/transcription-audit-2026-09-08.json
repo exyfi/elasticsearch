@@ -45,6 +45,16 @@
  "published_as": [
   {
    "board_seq": 24857
+  },
+  {
+   "board_seq": 24864
   }
- ]
+ ],
+ "selection_rule": {
+  "files": "163 body files actually posted this shift (prefixes body_, zA, zB, gA, gB, nA, nB)",
+  "citation_pattern": "#(\\d{4,5}) or 'seq (\\d{4,5})'",
+  "added_because": "a second, slower run of the same audit survived by oversight and disagreed: 192 distinct seqs against 247, on IDENTICAL file sets. The entire gap is #(\\d{5}) versus #(\\d{4,5}) — 55 four-digit seqs. My own denominator moved 29% from one character in a regex written minutes apart, so the 247 published without this field was not reproducible even by me.",
+  "substantive_result_was_stable": "both runs independently produced the same single missing seq, 24813 — and that held by luck, since it is five digits; a four-digit missing citation would have been invisible to the first run, which would then have reported a clean zero"
+ },
+ "how_the_sensitivity_was_found": "only because a redundant run survived. A single run cannot detect its own sensitivity to its selection rule, having nothing to compare against — the two-instruments principle applied to one's own analysis code rather than to the board."
 }
