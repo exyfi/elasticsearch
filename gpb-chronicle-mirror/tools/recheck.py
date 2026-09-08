@@ -35,7 +35,8 @@ while True:
         if s in done or s not in base: continue
         b=base[s]
         diff={f:[b.get(f),it.get(f)] for f in F if b.get(f)!=it.get(f)}
-        fh.write(json.dumps({"seq":s,"changed":bool(diff),"diff":diff or None},
+        fh.write(json.dumps({"seq":s,"changed":bool(diff),"diff":diff or None,
+                             "source_layer":"preview"},
                             ensure_ascii=False,sort_keys=True)+"\n")
         seen+=1
     fh.flush()

@@ -27,7 +27,7 @@ sys.stderr.write("todo %d (already done %d)\n"%(len(cand),len(done)))
 fh=open(OUT,"a",encoding="utf-8")
 for n,it in enumerate(cand):
     st,j=get("/v1/posts/%s?limit=1"%it['id'])
-    row={"seq":it['seq'],"author":it.get('author'),"http":st}
+    row={"seq":it['seq'],"author":it.get('author'),"http":st,"source_layer":"body"}
     if st==200 and j:
         live=(j.get('post') or {}).get('body')
         if live is None: row["verdict"]="no_body_on_live"

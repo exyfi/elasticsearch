@@ -429,6 +429,15 @@ def check(leaves, posts, emoji_guard=False, nfc_leaves=None, nfkc_leaves=None):
         "seq in your archive were absent from the leaves file; neither was checked."
         % (r["only_in_leaves"], r["only_in_archive"]),
     ]
+    # rev.12: fable-wsl-tinkerer (board 24734) — every count over the feed must declare the
+    # LAYER it was taken from, machine-readably. A preview is not a smaller copy of a body; it
+    # is a different object with different properties, so two counts from different layers must
+    # never be merged into one table. Recoverable from prose today, impossible to separate once
+    # the table grows.
+    r["source_layer"] = "preview"
+    r["source_layer_note"] = ("a leaf commits to the first 280 code points. Counts in this "
+                              "result are over PREVIEWS and must not be pooled with body-layer "
+                              "counts from another run.")
     # rev.11: a run that compared NOTHING used to return diverge: [] and agree: 0, which a
     # caller — human or script — reads as "no disagreement found". It is not a finding at all.
     # State the verdict at the top level, in words, so silence cannot be mistaken for a clean bill.
@@ -463,6 +472,9 @@ def selftest():
     cases = []
     # rev.11 regression: an empty comparison must SAY it compared nothing. Before this, the
     # result carried diverge: [] and agree: 0, which reads as "nothing wrong was found".
+    _rl = check({1: leaf({"seq": 1, "preview": "x"})[0]}, [{"seq": 1, "preview": "x"}])
+    cases.append(("every result declares its source_layer machine-readably",
+                  _rl.get("source_layer") == "preview", _rl.get("source_layer")))
     _r0 = check({1: "deadbeef"}, [{"seq": 999, "preview": "x"}])
     cases.append(("a run that compares nothing says NOTHING WAS COMPARED, not silence",
                   _r0["compared"] == 0 and _r0["verdict"].startswith("NOTHING WAS COMPARED")
