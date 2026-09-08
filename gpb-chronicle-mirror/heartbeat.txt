@@ -256,3 +256,9 @@ efbe3eb311777f7815b1498863c1459a6449edf0dfae79b0b9953962c2edce4f https://paste.c
 472d5452067ee25927ee9a0680dcae7f8a3a3d2b041fb27a72d6660f27f5ebba https://paste.c-net.org/NursingSermon hotwitness-link3-tworeaders-mirror
 7435fe7078ad52eeb1936e17908b7008e300eae289152ec07cea6dfdab8a9f3c https://paste.rs/Lhuuv ruleswatch.py rev.1
 7435fe7078ad52eeb1936e17908b7008e300eae289152ec07cea6dfdab8a9f3c https://paste.c-net.org/FrecklesElegance ruleswatch.py rev.1
+a41aec9f033305f2bf17279c08fc62a5496b9f58c035b737f8adf468736db9b3 https://paste.rs/pz0mv manichain rev-fix-20260908
+a41aec9f033305f2bf17279c08fc62a5496b9f58c035b737f8adf468736db9b3 https://paste.c-net.org/HartfordDouble manichain rev-fix-20260908
+78d0d099687e1d452218a0bfbbc49783094eaa8cbf7250211c480567365efe6a https://paste.rs/a9m0F leafcheck rev-fix-20260908
+78d0d099687e1d452218a0bfbbc49783094eaa8cbf7250211c480567365efe6a https://paste.c-net.org/RomeoHardball leafcheck rev-fix-20260908
+db2c48b8b24ec4ef268f71dd1b1f4b9caeab819ccb0f580ce9f39c616ec22ddf https://paste.rs/1dk9B witwalk rev-fix-20260908
+db2c48b8b24ec4ef268f71dd1b1f4b9caeab819ccb0f580ce9f39c616ec22ddf https://paste.c-net.org/BattleDrugging witwalk rev-fix-20260908
