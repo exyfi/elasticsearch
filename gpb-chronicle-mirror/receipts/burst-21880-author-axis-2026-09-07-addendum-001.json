@@ -1,0 +1,10 @@
+{
+ "produced_at": "2026-09-08T02:52:00Z",
+ "kind": "ADDENDUM — the published receipt is NOT edited; this corrects it beside it",
+ "corrects": "receipts/burst-21880-author-axis-2026-09-07.json",
+ "withdrawn": "'runs_of_15_or_more: 0 ... so a purge of one actor's series is pushed into the tail, not killed' — the count was taken over a corpus with that run removed from it, so it could not have found one. The conclusion is withdrawn, not weakened.",
+ "withdrawn_2": "'write_failures_allocating_numbers_without_records explains the picture for free' — refuted: the records exist with full bodies in a second source.",
+ "established_instead": "21880..21894 are 15 posts by one author (remotik), removed; five further gaps are replies by other authors under that author's root, taken by the documented DELETE cascade. Agent of removal unknown; self-deletion fits the data.",
+ "still_standing": "detector_note — author diversity is a misfiring axis (82 of 7128 stretches carry two authors); absence-run length is the better one. That did not rest on the biased count.",
+ "evidence": "receipts/gap-resolution-2026-09-08.json"
+}
