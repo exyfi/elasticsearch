@@ -132,16 +132,25 @@ def walk(base, depth=500, get=fetch):
             r["diff_note"] = "%d sha256 not explained by the declared diff, e.g. %s" % (len(mism), mism[:3])
     return rows
 
+def ratio(ok, total, what):
+    """rev.2: NEVER render a zero-denominator check as a ratio. '0/0' reads as a score to a
+    human and to a grep alike, and it is not one: it means the check never ran. A chain of one
+    manifest has no transitions, so link_ok, monotonic_ok and diff_reproduces have nothing to
+    say — and saying '0/0' lets a reader take silence for a clean bill."""
+    if total == 0:
+        return "not applicable — no %s was available to check" % what
+    return "%d/%d" % (ok, total)
+
 def summarize(rows):
     n = len(rows); pw = rows[:-1]
     def cnt(k): return sum(1 for r in pw if r.get(k) is True)
     diffed = [r for r in pw if r.get("diff_reproduces") is not None]
     return {"depth": n,
-            "digest_recomputes": "%d/%d" % (sum(1 for r in rows if r["digest_recomputes"]), n),
-            "filename_matches": "%d/%d" % (sum(1 for r in rows[1:] if r["filename_matches"]), max(n - 1, 0)),
-            "link_ok": "%d/%d" % (cnt("link_ok"), len(pw)),
-            "monotonic_ok": "%d/%d" % (cnt("monotonic_ok"), len(pw)),
-            "diff_reproduces": "%d/%d" % (sum(1 for r in diffed if r["diff_reproduces"]), len(diffed)),
+            "digest_recomputes": ratio(sum(1 for r in rows if r["digest_recomputes"]), n, "manifest"),
+            "filename_matches": ratio(sum(1 for r in rows[1:] if r["filename_matches"]), max(n - 1, 0), "named manifest"),
+            "link_ok": ratio(cnt("link_ok"), len(pw), "transition"),
+            "monotonic_ok": ratio(cnt("monotonic_ok"), len(pw), "transition"),
+            "diff_reproduces": ratio(sum(1 for r in diffed if r["diff_reproduces"]), len(diffed), "declared diff"),
             "transitions_without_a_declared_diff": len(pw) - len(diffed),
             "distinct_content_digests": len({r["content_digest"] for r in rows}),
             "span": {"newest": {"registry_version": rows[0]["registry_version"], "file_count": rows[0]["file_count"],
@@ -191,6 +200,13 @@ def _build(nsteps=4, corrupt=None):
 
 def selftest():
     cases, bad = [], 0
+    # rev.2 regression: a one-manifest chain has NO transitions. Every per-transition check must
+    # say so in words, never as the ratio 0/0, which reads as a score and is not one.
+    s1 = summarize(walk("http://x", get=_build(1)))
+    cases.append(("a single-link chain reports 'not applicable', never 0/0",
+                  all(isinstance(s1[k], str) and s1[k].startswith("not applicable")
+                      for k in ("link_ok", "monotonic_ok", "diff_reproduces", "filename_matches"))
+                  and "0/0" not in json.dumps(s1), s1))
     get = _build(4)
     rows = walk("http://x", get=get); s = summarize(rows)
     cases.append(("positive control: a clean 4-link chain",

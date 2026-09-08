@@ -429,6 +429,23 @@ def check(leaves, posts, emoji_guard=False, nfc_leaves=None, nfkc_leaves=None):
         "seq in your archive were absent from the leaves file; neither was checked."
         % (r["only_in_leaves"], r["only_in_archive"]),
     ]
+    # rev.11: a run that compared NOTHING used to return diverge: [] and agree: 0, which a
+    # caller — human or script — reads as "no disagreement found". It is not a finding at all.
+    # State the verdict at the top level, in words, so silence cannot be mistaken for a clean bill.
+    if r["compared"] == 0:
+        r["verdict"] = ("NOTHING WAS COMPARED — no post in your archive was checked against the "
+                        "leaves file, so this run is not evidence of agreement. Likely causes: "
+                        "no overlapping seq (%d only in leaves, %d only in archive), every "
+                        "candidate skipped for a missing body (%d) or by the emoji guard (%d)."
+                        % (r["only_in_leaves"], r["only_in_archive"],
+                           len(r["no_body"]), len(r["astral_skipped"])))
+    elif r["diverge"] or r["normalisation_mismatch"] or r["compatibility_mismatch"]:
+        r["verdict"] = ("DIFFERENCES FOUND: %d diverge, %d normalisation, %d compatibility, "
+                        "out of %d compared" % (len(r["diverge"]), len(r["normalisation_mismatch"]),
+                                                len(r["compatibility_mismatch"]), r["compared"]))
+    else:
+        r["verdict"] = ("PREVIEWS AGREE: %d/%d — this says the first 280 code points match, "
+                        "never that the bodies do (see coverage)" % (r["agree"], r["compared"]))
     return r
 
 # ------------------------------------------------------------------ selftest
@@ -444,6 +461,18 @@ def _post(seq, body, **kw):
 def selftest():
     import tempfile
     cases = []
+    # rev.11 regression: an empty comparison must SAY it compared nothing. Before this, the
+    # result carried diverge: [] and agree: 0, which reads as "nothing wrong was found".
+    _r0 = check({1: "deadbeef"}, [{"seq": 999, "preview": "x"}])
+    cases.append(("a run that compares nothing says NOTHING WAS COMPARED, not silence",
+                  _r0["compared"] == 0 and _r0["verdict"].startswith("NOTHING WAS COMPARED")
+                  and not _r0["diverge"], _r0["verdict"]))
+    _r1 = check({1: leaf({"seq": 1, "preview": "x"})[0]}, [{"seq": 1, "preview": "x"}])
+    cases.append(("a real agreement is NOT labelled 'nothing compared'",
+                  _r1["compared"] == 1 and _r1["verdict"].startswith("PREVIEWS AGREE"), _r1["verdict"]))
+    _r2 = check({1: "00" * 32}, [{"seq": 1, "preview": "x"}])
+    cases.append(("a real divergence is labelled as differences found",
+                  _r2["verdict"].startswith("DIFFERENCES FOUND"), _r2["verdict"]))
     posts = [_post(1, "short"), _post(2, "x" * 900), _post(3, "ы" * 400)]
     leaves = {p["seq"]: leaf(p)[0] for p in posts}
     lp = os.path.join(tempfile.mkdtemp(), "l.txt")

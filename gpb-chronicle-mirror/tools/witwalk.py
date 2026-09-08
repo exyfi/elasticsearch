@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""witwalk.py rev.1 — walk a hotwitness chain FROM ITS PUBLISHED ADDRESSES, as a stranger would.
+"""witwalk.py rev.2 — walk a hotwitness chain FROM ITS PUBLISHED ADDRESSES, as a stranger would.
 
 A chain of witness receipts is only worth what a third party can actually follow. This walks it
 the way someone who is not its author must: start at a URL, fetch bytes, recompute, read the
@@ -48,8 +48,13 @@ def walk(start_url, depth=50, get=fetch):
         except Exception as e:
             row["stop"] = "dead: %s (%s)" % (url, str(e)[:60]); rows.append(row); break
         row["sha256"] = sha(raw); row["bytes"] = len(raw)
-        row["digest_ok"] = (expected is None) or (row["sha256"] == expected)
-        if not row["digest_ok"]:
+        # rev.2: the FIRST link is committed to by nothing — no successor named its digest. It
+        # used to be reported digest_ok: true, which counts an unchecked link as a passed one.
+        row["digest_ok"] = None if expected is None else (row["sha256"] == expected)
+        if row["digest_ok"] is None:
+            row["digest_note"] = ("UNCHECKED: this is the address you supplied, and no successor "
+                                  "commits to its digest. Nothing here attests these bytes.")
+        if row["digest_ok"] is False:
             row["stop"] = "mismatch: the successor committed to %s" % expected
             rows.append(row); break
         try:
@@ -71,8 +76,14 @@ def walk(start_url, depth=50, get=fetch):
                     if f in v:
                         checked += 1
                         agree &= (m.get(f) == v[f])
+            # rev.2: a reader who attested NOTHING used to come out agrees: true and be counted
+            # as corroboration. An empty attestation is not agreement; it is an empty attestation.
             rd.append({"account": r.get("account"), "read_at": r.get("read_at"),
-                       "fields_checked": checked, "agrees": agree})
+                       "fields_checked": checked,
+                       "agrees": (agree if checked else None),
+                       "note": None if checked else
+                               "ATTESTED NOTHING: this reader supplied no digest this link also "
+                               "carries, so there was nothing to agree or disagree with."})
         row["independent_readers"] = rd
         rows.append(row)
         prev = j.get("prev_receipt")
@@ -88,21 +99,32 @@ def walk(start_url, depth=50, get=fetch):
             row["stop"] = "depth cap %d" % depth; break
         # mirror agreement, measured rather than assumed
         if len(urls) > 1:
-            seen = {}
+            seen, errs = {}, {}
             for u in urls:
                 try: seen[u] = sha(get(u))
-                except Exception as e: seen[u] = "ERR " + str(e)[:40]
+                except Exception as e: errs[u] = str(e)[:60]
             row["prev_mirrors"] = seen
-            row["prev_mirrors_agree"] = len({v for v in seen.values() if not v.startswith("ERR")}) == 1
+            row["prev_mirrors_unreachable"] = errs or None
+            # rev.2: a mirror that could not be FETCHED is not a mirror that DISAGREED. The two
+            # were merged before, so link rot on one host read as an inconsistency between hosts.
+            row["prev_mirrors_agree"] = (len(set(seen.values())) == 1) if len(seen) > 1 else None
+            if len(seen) < 2:
+                row["prev_mirrors_note"] = ("NOT COMPARED: fewer than two mirrors answered, so "
+                                            "no agreement between hosts was tested.")
         url, expected = urls[0], prev.get("sha256")
     return rows
 
 def summarize(rows):
+    readers = [x for r in rows for x in r.get("independent_readers", [])]
     return {"links_walked": len(rows),
-            "digests_ok": sum(1 for r in rows if r.get("digest_ok")),
+            "digests_checked": sum(1 for r in rows if r.get("digest_ok") is not None),
+            "digests_ok": sum(1 for r in rows if r.get("digest_ok") is True),
+            "digests_unchecked": sum(1 for r in rows if r.get("digest_ok") is None),
             "links_with_independent_readers": sum(1 for r in rows if r.get("independent_readers")),
-            "independent_reader_agreements": sum(1 for r in rows for x in r.get("independent_readers", []) if x["agrees"]),
-            "mirror_checks": [r.get("prev_mirrors_agree") for r in rows if "prev_mirrors_agree" in r],
+            "independent_reader_agreements": sum(1 for x in readers if x["agrees"] is True),
+            "independent_readers_attesting_nothing": sum(1 for x in readers if x["agrees"] is None),
+            "mirror_checks": [r.get("prev_mirrors_agree") for r in rows if r.get("prev_mirrors_agree") is not None],
+            "mirror_hosts_unreachable": [r["prev_mirrors_unreachable"] for r in rows if r.get("prev_mirrors_unreachable")],
             "stop": rows[-1].get("stop"),
             "reading": ("a 'horizon' stop is a hole in the chain's DESIGN — a link named by digest "
                         "with no address — while 'dead' is link rot in an address that was "
@@ -121,8 +143,14 @@ def selftest():
         if u not in store: raise urllib.error.HTTPError(u, 404, "Not Found", None, None)
         return store[u]
     r = walk("http://x/l2", get=get); s = summarize(r)
+    # rev.2: this assertion USED to demand digests_ok == 2 on a two-link chain, and passed —
+    # which is precisely the defect. Only one of the two links is attested by a successor; the
+    # entry point is attested by nothing. The old test was part of the bug, not a check on it.
     cases.append(("positive control: a two-link chain walks to genesis",
-                  s["links_walked"] == 2 and s["digests_ok"] == 2 and "genesis" in s["stop"], s))
+                  s["links_walked"] == 2 and "genesis" in s["stop"], s))
+    cases.append(("the entry link counts as UNCHECKED, not as a passed digest",
+                  s["digests_ok"] == 1 and s["digests_unchecked"] == 1
+                  and r[0]["digest_ok"] is None and "UNCHECKED" in r[0]["digest_note"], s))
     cases.append(("an agreeing independent reader is counted",
                   s["independent_reader_agreements"] == 1, s))
     # a reader who disagrees must NOT be counted as agreement
@@ -142,6 +170,19 @@ def selftest():
     s4 = summarize(walk("http://x/l2", get=get))
     cases.append(("must catch: one byte changed in an earlier link breaks the walk",
                   "mismatch" in (s4["stop"] or ""), s4))
+    # rev.2: a reader who attested nothing must not be counted as corroboration
+    empty = json.loads(l2); empty["independent_readers"][0]["digests"] = {}
+    store["http://x/l2e"] = json.dumps(empty).encode()
+    se = summarize(walk("http://x/l2e", get=get))
+    cases.append(("must catch: a reader attesting NOTHING is not an agreement",
+                  se["independent_reader_agreements"] == 0
+                  and se["independent_readers_attesting_nothing"] == 1, se))
+    # rev.2: an unreachable mirror is link rot, not a disagreement between hosts
+    two = json.loads(l2); two["prev_receipt"]["urls"] = ["http://x/l1", "http://x/gone"]
+    store["http://x/l2m"] = json.dumps(two).encode()
+    sm = summarize(walk("http://x/l2m", get=get))
+    cases.append(("an unreachable mirror is reported as unreachable, not as disagreement",
+                  sm["mirror_checks"] == [] and sm["mirror_hosts_unreachable"], sm))
     nbad = 0
     for label, ok, s in cases:
         print(("PASS  " if ok else "FAIL  ") + label)
