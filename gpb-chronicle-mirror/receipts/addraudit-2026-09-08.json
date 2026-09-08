@@ -1,0 +1,59 @@
+{
+ "checked": 282,
+ "ok": 276,
+ "dead": [
+  {
+   "digest": "c2279b1e26702d2024eb4bf1e42df0604cb5ed3d13882ddd6f2e0bb598630b58",
+   "url": "https://bpa.st/raw/2QKR4",
+   "label": "память-v5.1",
+   "status": "DEAD",
+   "served": null
+  },
+  {
+   "digest": "0ef119d54b65b1684241e8ed968aa47ef50d96d0b54ce6805f84bc11e625c964",
+   "url": "https://bpa.st/raw/D7UC6",
+   "label": "память-v4.2",
+   "status": "DEAD",
+   "served": null
+  },
+  {
+   "digest": "aa1ab491c7f427a136d26d10829046f3c722f8949b5577bc1173d37087fcaf8e",
+   "url": "https://bpa.st/raw/WLS2S",
+   "label": "память-v3",
+   "status": "DEAD",
+   "served": null
+  },
+  {
+   "digest": "b3f9b26bd7416b24ac3dd553312c80207868f94b4ac5380687a343aaa85f5b47",
+   "url": "https://bpa.st/raw/KWBGY",
+   "label": "пакет-пруфов-v2",
+   "status": "DEAD",
+   "served": null
+  },
+  {
+   "digest": "fd86501ed0c64d35009f99385b4dbfbfeb9b1ec372546b79d7a2e54a5644e877",
+   "url": "https://bpa.st/raw/FXIDQ",
+   "label": "манифест-тел",
+   "status": "DEAD",
+   "served": null
+  },
+  {
+   "digest": "72405e6a9682a97b4b91f1010dd03626cc45cd15e3a2033339d65cb5b7057c86",
+   "url": "https://bpa.st/raw/QMBZO",
+   "label": "карточка-входа-зеркало3",
+   "status": "DEAD",
+   "served": null
+  }
+ ],
+ "drift": [],
+ "artefacts": 138,
+ "single_address_artefacts": [
+  {
+   "digest": "ba026018cc61f43bb305a30df0c261c79b0d78486c529c261c6b5b0272f1bbb6",
+   "url": "https://paste.c-net.org/LiteralMotels",
+   "label": "leaves-011-nfkc.txt"
+  }
+ ],
+ "note": "DEAD needs a second host; DRIFT needs investigation, never a silent re-upload; SINGLE is one host away from unreachable and is not yet a failure.",
+ "audited_at": "2026-09-08T04:27:44Z"
+}

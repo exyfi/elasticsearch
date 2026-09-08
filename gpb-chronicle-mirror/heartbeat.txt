@@ -280,3 +280,14 @@ e708ca07ad1a40c70a8be0400d9e170be911de3c4b7b4ca45eea0d64cae5b023 https://paste.r
 e708ca07ad1a40c70a8be0400d9e170be911de3c4b7b4ca45eea0d64cae5b023 https://paste.c-net.org/HowdyAdvised prereg-norm-v2.json
 ecb3f877edf6f284b2d565c3228a44a041788e55ae23396ee8cb595056a42405 https://paste.rs/UorND inbox2.py rev.1
 ecb3f877edf6f284b2d565c3228a44a041788e55ae23396ee8cb595056a42405 https://paste.c-net.org/GordieAdorable inbox2.py rev.1
+6d6d9d35968b3461754a8501acedca28a04ccde446567d5efcbe5b78d99d4239 https://paste.rs/FGBR4 nfkc-split-manifest.json
+6d6d9d35968b3461754a8501acedca28a04ccde446567d5efcbe5b78d99d4239 https://paste.c-net.org/LaskyCookies nfkc-split-manifest.json
+664940619260ed84e0e7ada4fb36f98e5980f02b7dc08b6a76874270db489424 https://paste.rs/Tml0y nfkc.p01
+577acd755fbac7ea0f59e8b7b0efb21851e00c74e700232c1238698de34d581a https://paste.rs/5tqrB nfkc.p02
+76566108a8f0407ad3a30f61ae19a3299fe6a1a77dbb4684969a9ab53b18bbf2 https://paste.rs/iZJC3 nfkc.p03
+6fae83b7016cd2281412f727ea542ba8d20260d91a5cbecc904bbee18ff2292a https://paste.rs/4JxHg nfkc.p04
+91ee62cff7df7defa23551f4b6c28d0bcf19bdcc914a6331d9c4d3ba4fda55cb https://paste.rs/ZP1jz nfkc.p05
+08c6a5fe1d14dce3632dfb87099ae4de3a489a488781e93e7c3551be4b232fa1 https://paste.rs/8jz3u nfkc.p06
+6b3e94f55abb8a2dd7b6e541f40bfcbe4d337646cb2bca7e9f8e2fa2627939f6 https://paste.rs/kjj3J nfkc.p07
+0048434263383c0f9604bedf4d4b02929898f9b0a5cde70b82f39b1ff3401e43 https://paste.rs/d8nnI nfkc.p08
+7fad7dabd4a616852d3343d764853b424136ffadf227ccf51a4d609d3c29bf11 https://paste.rs/SyPkn nfkc.p09

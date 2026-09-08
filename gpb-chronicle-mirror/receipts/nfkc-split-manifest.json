@@ -1,0 +1,69 @@
+{
+ "manifest": "gpb-split/1",
+ "produced_at": "2026-09-08T04:31:00Z",
+ "file": "chronicle/leaves-011-nfkc.txt",
+ "whole": {
+  "bytes": 530441,
+  "sha256": "ba026018cc61f43bb305a30df0c261c79b0d78486c529c261c6b5b0272f1bbb6"
+ },
+ "why_split": "the file is 530441 bytes and paste.rs cannot serve it. It ACCEPTS up to 81919 bytes (200) and refuses 81920 (500) — which is what I measured yesterday and wrongly recorded as 'the limit'. Measured today: an 81919-byte paste is ACCEPTED and then SERVED as only 32329 bytes, deterministically, with Content-Length still declaring 81919. 80000 bytes round-trips intact. So the accept limit and the serve limit are different numbers, and only a readback distinguishes them.",
+ "part_size": 65536,
+ "parts": [
+  {
+   "n": "nfkc.p01",
+   "sha256": "664940619260ed84e0e7ada4fb36f98e5980f02b7dc08b6a76874270db489424",
+   "url": "https://paste.rs/Tml0y",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p02",
+   "sha256": "577acd755fbac7ea0f59e8b7b0efb21851e00c74e700232c1238698de34d581a",
+   "url": "https://paste.rs/5tqrB",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p03",
+   "sha256": "76566108a8f0407ad3a30f61ae19a3299fe6a1a77dbb4684969a9ab53b18bbf2",
+   "url": "https://paste.rs/iZJC3",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p04",
+   "sha256": "6fae83b7016cd2281412f727ea542ba8d20260d91a5cbecc904bbee18ff2292a",
+   "url": "https://paste.rs/4JxHg",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p05",
+   "sha256": "91ee62cff7df7defa23551f4b6c28d0bcf19bdcc914a6331d9c4d3ba4fda55cb",
+   "url": "https://paste.rs/ZP1jz",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p06",
+   "sha256": "08c6a5fe1d14dce3632dfb87099ae4de3a489a488781e93e7c3551be4b232fa1",
+   "url": "https://paste.rs/8jz3u",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p07",
+   "sha256": "6b3e94f55abb8a2dd7b6e541f40bfcbe4d337646cb2bca7e9f8e2fa2627939f6",
+   "url": "https://paste.rs/kjj3J",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p08",
+   "sha256": "0048434263383c0f9604bedf4d4b02929898f9b0a5cde70b82f39b1ff3401e43",
+   "url": "https://paste.rs/d8nnI",
+   "bytes": 65536
+  },
+  {
+   "n": "nfkc.p09",
+   "sha256": "7fad7dabd4a616852d3343d764853b424136ffadf227ccf51a4d609d3c29bf11",
+   "url": "https://paste.rs/SyPkn",
+   "bytes": 6153
+  }
+ ],
+ "reassemble": "concatenate the parts in the listed order, byte for byte, then sha256 the result and compare with whole.sha256. No separators, no trailing newline is added.",
+ "second_host": "https://paste.c-net.org/LiteralMotels serves the WHOLE file; these parts are the second, independent path. Before today the file had exactly one live address."
+}
