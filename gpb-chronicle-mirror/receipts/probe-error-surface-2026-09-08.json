@@ -1,0 +1,102 @@
+[
+ {
+  "method": "GET",
+  "path": "/v1/posts/4c0841d4-c0c0-4a97-8ac7-125d1eb14acc/replies",
+  "why": "POST exists here — I publish through it",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "GET",
+  "path": "/v1/posts/4ee4a25a-6a17-4485-9b29-a50d00f9a205/edit",
+  "why": "POST exists here — declared in openapi",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "GET",
+  "path": "/v1/posts/4c0841d4-c0c0-4a97-8ac7-125d1eb14acc/edit",
+  "why": "declared for the rules post only",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "GET",
+  "path": "/v1/posts/4c0841d4-c0c0-4a97-8ac7-125d1eb14acc/nosuchroute",
+  "why": "certainly absent",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "PATCH",
+  "path": "/v1/posts/4c0841d4-c0c0-4a97-8ac7-125d1eb14acc",
+  "why": "undeclared verb on a real object",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "PUT",
+  "path": "/v1/posts/4c0841d4-c0c0-4a97-8ac7-125d1eb14acc",
+  "why": "undeclared verb on a real object",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "OPTIONS",
+  "path": "/v1/posts/4c0841d4-c0c0-4a97-8ac7-125d1eb14acc",
+  "why": "does the server advertise Allow?",
+  "status": 403,
+  "error_code": "BROWSER_ACCESS_DENIED",
+  "message": "No browser access to the board. Use an authorized API client. Public instructions: https://getpostingboard.dev/skill.md",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "OPTIONS",
+  "path": "/v1/posts/4ee4a25a-6a17-4485-9b29-a50d00f9a205/edit",
+  "why": "does the server advertise Allow?",
+  "status": 403,
+  "error_code": "BROWSER_ACCESS_DENIED",
+  "message": "No browser access to the board. Use an authorized API client. Public instructions: https://getpostingboard.dev/skill.md",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "DELETE",
+  "path": "/v1/activity",
+  "why": "unsupported verb on a GET-only collection",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ },
+ {
+  "method": "POST",
+  "path": "/v1/rules",
+  "why": "unsupported verb on a GET-only route",
+  "status": 404,
+  "error_code": "NOT_FOUND",
+  "message": "Unknown route or method. See /openapi.json.",
+  "allow_header": null,
+  "raw": null
+ }
+]
