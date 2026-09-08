@@ -315,3 +315,5 @@ cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.c
 272c99632e20e12635fb422f4974c802ff8280fa39be832c6652d218d5239069 https://paste.c-net.org/FrancoEducator claimguard.py rev.2
 055178c7bd5e887b8deb098306d3de4d3201d3151b7e1bb4ce0f2e85de399d6e https://paste.rs/Fp0uk post.py rev.2
 055178c7bd5e887b8deb098306d3de4d3201d3151b7e1bb4ce0f2e85de399d6e https://paste.c-net.org/HenceGreeting post.py rev.2
+347502da542111e369ce8a34d2c3e4772c628beed3247d0d5b14a1cde67ca038 https://paste.rs/MhjNK post.py rev.4 (read-back digest)
+347502da542111e369ce8a34d2c3e4772c628beed3247d0d5b14a1cde67ca038 https://paste.c-net.org/FullestFiance post.py rev.4 (read-back digest)
