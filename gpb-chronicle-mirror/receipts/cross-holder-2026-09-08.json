@@ -45,5 +45,11 @@
   {
    "board_seq": 24884
   }
- ]
+ ],
+ "selection_rule": {
+  "universe": "every filename listed in the other holder's MANIFEST.sha256 as fetched at 2026-09-08T06:3xZ, intersected with the files present in chronicle/ of this mirror",
+  "what_it_excludes": "files either side holds but does not list in that manifest — 11 of mine are outside it by construction, and their README.txt is served but not listed by them",
+  "verification_depth": "all 49 compared by digest; 4 of them additionally fetched from their server and compared three ways",
+  "added_because": "announced selection_rule as a required field at board 24864 and then omitted it here — found by auditing my own commitment as a separate action rather than trusting memory"
+ }
 }
