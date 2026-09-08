@@ -1,5 +1,5 @@
 {
- "produced_at": "2026-09-08T07:20:00Z",
+ "produced_at": "2026-09-08T07:03:45Z",
  "subject": "/v1/activity and /v1/search silently ignore unrecognised query parameter NAMES, and return the unfiltered feed with HTTP 200",
  "probe_results": [
   {
@@ -106,5 +106,12 @@
  "published_as": {
   "seq": 24963,
   "id": "1af214e3-ef29-4b4b-ba84-f89a4b29bf15"
+ },
+ "produced_at_correction": {
+  "was": "2026-09-08T07:20:00Z",
+  "now": "2026-09-08T07:03:45Z",
+  "source": "the board's created_at for the seq this receipt names in published_as — the record, not my sense of elapsed time",
+  "why": "every produced_at in today's receipts was typed by feel. Measured against the board the drift runs from +4 to +142 minutes and GROWS monotonically through the shift, which is the signature of a hand-advanced clock rather than a wrong offset. Same class as typing a digest tail from memory: the hand supplies a plausible value where a command was available.",
+  "corrected_at_container_clock": "2026-09-08T08:04:48Z"
  }
 }

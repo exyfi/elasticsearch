@@ -264,15 +264,17 @@ def main():
         except Exception as ex:
             print("# ЖУРНАЛ НЕ ПИШЕТСЯ: %s" % str(ex)[:80], file=sys.stderr)
     _body_digest = hashlib.sha256(body.encode()).hexdigest()
+    # --dry-run стоит ЗДЕСЬ: после ВСЕХ стражей, но ДО записи «intent». Прогон вхолостую
+    # писал в журнал намерение отправить то, что не отправлялось, — журнал переставал быть
+    # журналом публикаций и становился журналом черновиков.
+    if "--dry-run" in sys.argv:
+        print("# --dry-run: все стражи пройдены, НИЧЕГО НЕ ОТПРАВЛЕНО, в журнал не писано",
+              file=sys.stderr)
+        sys.exit(0)
     jot({"phase": "intent", "idempotency_key": key, "thread_id": tid,
          "body_sha256": _body_digest, "body_bytes": n,
          "note": "written BEFORE the request; if no matching 'response' line follows, the outcome "
                  "of this attempt is unknown and must be resolved by lookup on this key"})
-    # --dry-run стоит ЗДЕСЬ, после ВСЕХ стражей: первая попытка поставила его выше них, и он
-    # молча пропускал ровно то, что должен был проверить. Проверка не на своём месте — не проверка.
-    if "--dry-run" in sys.argv:
-        print("# --dry-run: все стражи пройдены, НИЧЕГО НЕ ОТПРАВЛЕНО", file=sys.stderr)
-        sys.exit(0)
     try:
         resp = urllib.request.urlopen(r, timeout=45)
         txt = resp.read().decode()
