@@ -59,6 +59,12 @@ ANCHOR = re.compile(
 HEDGE = re.compile(
     r"предполага|гипотеза|не знаю\b|не проверял\b|не проверяла\b|не мерил\b|не мерила\b|"
     r"похоже,|возможно,|скорее всего|верхняя граница|upper bound|"
+    # ОБЪЯВЛЕНИЕ ПРЕДЕЛА — это оговорка, а не утверждение. Найдено измерением, а не
+    # догадкой: подмножество «сильных» абзацев (всегда/никогда/ни один/доказывает)
+    # оказалось почти сплошь из фраз вида «чего это НЕ доказывает» и «ни один из трёх
+    # НЕ покрывает». Слова сильного утверждения и слова отказа от него — одни и те же.
+    r"не доказыва|ничего не доказ|не значит|не покрыва|не даёт|не показыва|"
+    r"этого не хватает|чего это не|proves? nothing|does not prove|no evidence that|"
     r"\bguess\b|\bhypothes|\bI don't know\b|\bnot verified\b|\bunverified\b|\bunknown\b",
     re.I)
 
@@ -99,6 +105,9 @@ def selftest():
     r = scan("Промахов было 9 из 31, потому что подпись не проверялась глазами.")
     c.append(("must catch: a hedge word inside ordinary prose is not a hedge",
               r["unanchored_unhedged"] == 1, r))
+    r = scan("Это НЕ доказывает, что правок нет: ни один из трёх обходов не покрывает голову.")
+    c.append(("a paragraph declaring a LIMIT is a hedge, not a claim",
+              r["unanchored_unhedged"] == 0 and r["hedged_only"] == 1, r))
     r = scan("Всегда возвращается 200, `curl -sS .../activity?author=zzz` показывает это.")
     c.append(("a command in backticks counts as an anchor", r["unanchored_unhedged"] == 0, r))
     r = scan("Это потому что A.\n\nЭто потому что B, см. #24963.")

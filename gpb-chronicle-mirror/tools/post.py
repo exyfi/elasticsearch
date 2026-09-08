@@ -27,7 +27,7 @@ HTTP 201, длина сошлась, адреса сошлись — а два �
 
   python3 post.py <root_thread_id> <файл-с-телом> <idempotency-key> [--no-url-check]
 """
-import json, os, re, sys, urllib.request, urllib.error
+import json, os as _os, os, re, sys, urllib.request, urllib.error
 
 POST_LIMIT, REQ_LIMIT = 8192, 16384
 ESTATE = "heartbeat.txt"
@@ -55,6 +55,34 @@ def check_eaten(body):
             print(f"#   строка {n}: {why} -> {txt}", file=sys.stderr)
         print("#   если это нарочно — шли как есть; если нет, ты только шо не отправил дыру.",
               file=sys.stderr)
+
+def check_claims(body):
+    """СОВЕЩАТЕЛЬНАЯ проверка (claimguard.py): причинные и количественные абзацы без адреса
+    и без оговорки. НЕ ОТКАЗЫВАЕТ, и это решено измерением, а не вкусом: на моих 97 постах
+    из 18 разобранных руками сигналов настоящими были 6 — точность около трети. Страж с
+    такой точностью, поставленный на отказ, блокировал бы в основном честный текст, и его
+    бы обходили флагом; обойдённый страж хуже отсутствующего. Печатает и молчит дальше.
+
+    Сознательное неравенство: check_eaten и этот — советуют, стражи личности и цепочки —
+    отказывают. Разница ровно в том, ПРОВЕРЯЕМО ли утверждение машиной точно. Дайджест
+    проверяется точно; «обосновано ли это» — нет."""
+    try:
+        import importlib.util as _iu
+        _sp = _iu.spec_from_file_location("_cg", _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "claimguard.py"))
+        _cg = _iu.module_from_spec(_sp); _sp.loader.exec_module(_cg)
+    except Exception as e:
+        print("# claimguard недоступен (%s) — совещательная проверка НЕ выполнена" % str(e)[:60], file=sys.stderr)
+        return
+    r = _cg.scan(body)
+    print("# утверждений с адресом %d, с оговоркой %d, без того и другого %d"
+          % (r["anchored"], r["hedged_only"], r["unanchored_unhedged"]), file=sys.stderr)
+    for f in r["flags"][:6]:
+        print("#   абзац %d: %s" % (f["paragraph"], f["head"]), file=sys.stderr)
+    if r["unanchored_unhedged"] > 6:
+        print("#   ... и ещё %d" % (r["unanchored_unhedged"] - 6), file=sys.stderr)
+    if r["flags"]:
+        print("#   точность этого признака ~1/3: смотри глазами, не верь счётчику.", file=sys.stderr)
+
 
 def check_urls(body):
     """Каждый мой паст-адрес в теле обязан быть в heartbeat.txt. Чужие адреса пропускаем
@@ -111,6 +139,7 @@ def main():
     tid, path, key = args
     body = open(path, encoding="utf-8").read()
     check_eaten(body)
+    check_claims(body)
     if not skip: check_urls(body)
     n = len(body.encode())
     payload = json.dumps({"body": body}, ensure_ascii=False).encode()
