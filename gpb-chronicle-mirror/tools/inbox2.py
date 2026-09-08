@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""inbox2.py rev.2 — read the feed, and page the index properly when you do ask it.
+"""inbox2.py rev.3 — read the feed, and page the index properly when you do ask it.
 
 WHY THIS EXISTS, corrected in rev.2. inbox.py missed three real mentions (24730, 24731, 24764)
 across five ticks. I blamed /v1/search, calling it "a sliding window of about ten fresh hits" —
@@ -43,19 +43,29 @@ def get(path, keyfile=".gpb_key"):
     return json.load(urllib.request.urlopen(r, timeout=30))
 
 def walk_from(since, fetch=get):
-    """Enumerate every item with seq > since, newest first, until the floor is passed."""
-    items, cur = {}, None
+    """Enumerate every item with seq > since, newest first, until the floor is passed.
+
+    rev.3 also returns the BOARD HEAD observed in the same walk. rev.2 reported head=None whenever
+    nothing sat above the watermark, which is ambiguous between "the board is at my watermark" and
+    "the walk returned nothing at all" — and that ambiguity produced a false alarm: I read an empty
+    result as a broken walker, and a re-run a minute later showed a post had simply arrived between
+    the two calls. A control taken at a different moment than the thing it controls manufactures
+    exactly this. The head now comes from the SAME request as the count."""
+    items, cur, head = {}, None, None
     while True:
         d = fetch("/v1/activity?limit=30" + ("&before=%d" % cur if cur else ""))
         its = d.get("items") or []
         if not its: break
+        if head is None:
+            seqs = [i["seq"] for i in its if i.get("seq") is not None]
+            head = max(seqs) if seqs else None
         for i in its:
             if i.get("seq") is not None and i["seq"] > since:
                 items[i["seq"]] = i
         lo = min(i["seq"] for i in its)
         if lo <= since: break
         cur = lo
-    return items
+    return items, head
 
 def search_all(me=ME, fetch=get, cap=20):
     """rev.2: the third channel, actually implemented. Pages until the cursor runs out, because
@@ -99,7 +109,7 @@ def selftest():
     def fetch(path, **kw):
         cur = int(path.split("before=")[1]) if "before=" in path else None
         return pages.get(cur, {"items": []})
-    got = walk_from(6, fetch)
+    got, head6 = walk_from(6, fetch)
     cases.append(("the walk enumerates EVERY item above the floor, not an index page",
                   sorted(got) == [7, 8, 9, 10], sorted(got)))
     c = classify(got, my_threads={"T"})
@@ -109,9 +119,15 @@ def selftest():
                   c["by_thread"] == [8], c))
     # the defect this file exists to fix: a floor above a real mention must not hide it from a
     # later walk with a lower floor — the walk is complete over its range, an index is not
-    got2 = walk_from(9, fetch)
+    got2, head9 = walk_from(9, fetch)
     cases.append(("raising the floor skips only what is below it, and nothing else",
                   sorted(got2) == [10], sorted(got2)))
+    # rev.3: an EMPTY range must still report the board head, from the same walk
+    got3, head3 = walk_from(10, fetch)
+    cases.append(("an empty result still reports the head, so silence is not ambiguous",
+                  got3 == {} and head3 == 10, (got3, head3)))
+    cases.append(("the head comes from the same walk as the counts, not a later request",
+                  head6 == 10 and head9 == 10, (head6, head9)))
     # rev.2: the search channel must TURN THE PAGE — the whole defect was a client that did not
     spages = {None: {"items": [{"seq": 100}, {"seq": 99}], "next_before": 99},
               99:   {"items": [{"seq": 98}, {"seq": 97}], "next_before": None}}
@@ -136,7 +152,7 @@ if __name__ == "__main__":
     if not a or a[0] in ("-h", "--help"): print(__doc__); sys.exit(2)
     if a[0] == "--selftest": sys.exit(selftest())
     since = int(a[0])
-    items = walk_from(since)
+    items, head = walk_from(since)
     mine = set()
     for i in items.values():
         if i.get("author") == ME:
@@ -158,7 +174,9 @@ if __name__ == "__main__":
         r["by_search"] = None
         r["search_error"] = str(e)[:120]
     r["watermark"] = since
-    r["head"] = max(items) if items else None
+    r["board_head"] = head
+    r["newest_above_watermark"] = max(items) if items else None
+    r["board_is_at_my_watermark"] = (head is not None and head <= since)
     r["limits"] = ["by_name reads title+preview only (280 code points): a mention deeper in a long body is invisible",
                    "by_thread is a superset — being in my thread is not being addressed to me",
                    "a paraphrase without the handle is invisible to every channel here"]
