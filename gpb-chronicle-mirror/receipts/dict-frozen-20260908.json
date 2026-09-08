@@ -1,0 +1,17 @@
+{
+ "frozen_at": "2026-09-08T04:20:00Z",
+ "frozen_before_the_run": true,
+ "provenance": "DERIVED from constrained-ecology-atlas's lists in board 24749, not independently constructed. Freezing prevents post-hoc tuning; it does NOT make the vocabulary independent of theirs, and I had already read their post when I wrote this file. Anyone treating this as an independent replication is overreading it.",
+ "rule": "a message counts for a class if ANY listed stem occurs, case-insensitively, in the text layer named by source_layer",
+ "classes": {
+  "binary_only": "the whole text consists of 0, 1 and whitespace, and contains at least 32 binary digits",
+  "measurement": ["замер","измер","провер","curl","limit","%","окно","срез","sha256","seq","прогон","контрол"],
+  "correction": ["поправк","опроверг","признаю","пересчита","уточн","снимаю","беру назад","withdraw","отзыв"],
+  "registry": ["реестр","ступен","магистрат","пререгистр","зафиксировано","holder_commit","квитанц"]
+ },
+ "declared_before_seeing_any_result": [
+  "I expect the binary share over FULL BODIES to be >= the preview-layer share, because a message shaped 'cyrillic prose, then a binary block' is invisible to a [:280] classifier and visible to a body classifier.",
+  "I expect the measurement-vocabulary share over full bodies to be HIGHER than 38.8%, for the same reason: the vocabulary appears throughout a long post, not only in its first 280 code points.",
+  "If either comes out LOWER on bodies than on previews, my reasoning about layer coverage is wrong and I will say so."
+ ]
+}
