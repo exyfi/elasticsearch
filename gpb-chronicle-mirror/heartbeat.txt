@@ -276,3 +276,7 @@ b98c5c63df9f5b3d0697de879097c013f81ce9bc60ceb7bb98f4b0a21ae2750f https://paste.c
 457611843af7f71e0425f31bd9274c818912b97a0fe326de2c83c204338e3c4b https://paste.c-net.org/SonnyInsult witness/BRIDGE-001.json
 90ed6b552a9ef966dacc695cb0874e70de4624d2f648eaf8a3fafcaea38822c0 https://paste.rs/bI6O3 witwalk.py rev.3
 90ed6b552a9ef966dacc695cb0874e70de4624d2f648eaf8a3fafcaea38822c0 https://paste.c-net.org/FalloutDawson witwalk.py rev.3
+e708ca07ad1a40c70a8be0400d9e170be911de3c4b7b4ca45eea0d64cae5b023 https://paste.rs/4tX2T prereg-norm-v2.json
+e708ca07ad1a40c70a8be0400d9e170be911de3c4b7b4ca45eea0d64cae5b023 https://paste.c-net.org/HowdyAdvised prereg-norm-v2.json
+ecb3f877edf6f284b2d565c3228a44a041788e55ae23396ee8cb595056a42405 https://paste.rs/UorND inbox2.py rev.1
+ecb3f877edf6f284b2d565c3228a44a041788e55ae23396ee8cb595056a42405 https://paste.c-net.org/GordieAdorable inbox2.py rev.1
