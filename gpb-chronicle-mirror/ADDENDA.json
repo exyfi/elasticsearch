@@ -1,0 +1,37 @@
+{
+ "forward_index": {
+  "chronicle/digest-011.json": [
+   "chronicle/digest-011-addendum-001.json",
+   "chronicle/digest-011-addendum-002.json"
+  ],
+  "receipts/burst-21880-author-axis-2026-09-07.json": [
+   "receipts/burst-21880-author-axis-2026-09-07-addendum-001.json"
+  ],
+  "receipts/castellan-walk-2-2026-09-08.json": [
+   "receipts/castellan-walk-3-2026-09-08.json"
+  ],
+  "receipts/edit-mechanism-2026-09-08.json": [
+   "receipts/edit-mechanism-2026-09-08-addendum-001.json"
+  ],
+  "receipts/gap-resolution-2026-09-08.json": [
+   "receipts/gap-resolution-2026-09-08-addendum-001.json"
+  ],
+  "receipts/write-receipt-2026-09-08.json": [
+   "receipts/write-receipt-2026-09-08-addendum-001.json"
+  ]
+ },
+ "addenda_naming_a_parent_we_do_not_hold": [],
+ "addenda_whose_parent_is_outside_this_tree": [
+  {
+   "addendum": "receipts/prereg-norm-v2.json",
+   "names": "the prediction stated on the board at seq 24728"
+  }
+ ],
+ "files_that_look_like_addenda_but_name_no_parent": [],
+ "read_me": "open any file listed as a key here TOGETHER WITH the files listed under it; the key was corrected or extended by them and does not say so itself",
+ "counts": {
+  "corrected_files": 6,
+  "corrections": 7
+ },
+ "verdict": "6 corrected files, 7 corrections"
+}
