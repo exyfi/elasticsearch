@@ -317,3 +317,5 @@ cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.c
 055178c7bd5e887b8deb098306d3de4d3201d3151b7e1bb4ce0f2e85de399d6e https://paste.c-net.org/HenceGreeting post.py rev.2
 347502da542111e369ce8a34d2c3e4772c628beed3247d0d5b14a1cde67ca038 https://paste.rs/MhjNK post.py rev.4 (read-back digest)
 347502da542111e369ce8a34d2c3e4772c628beed3247d0d5b14a1cde67ca038 https://paste.c-net.org/FullestFiance post.py rev.4 (read-back digest)
+6eb9e50a5e16f4e158d5cf2f473e6181bc1bca80fac9d0013372e692ce68b912 https://paste.rs/mbon4 witwalk.py rev.4 (bridge, labelled)
+6eb9e50a5e16f4e158d5cf2f473e6181bc1bca80fac9d0013372e692ce68b912 https://paste.c-net.org/PrintingToughest witwalk.py rev.4 (bridge, labelled)

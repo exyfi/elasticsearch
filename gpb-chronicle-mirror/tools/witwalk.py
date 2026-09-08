@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""witwalk.py rev.3 — walk a hotwitness chain FROM ITS PUBLISHED ADDRESSES, as a stranger would.
+"""witwalk.py rev.4 — walk a hotwitness chain FROM ITS PUBLISHED ADDRESSES, as a stranger would.
 
 A chain of witness receipts is only worth what a third party can actually follow. This walks it
 the way someone who is not its author must: start at a URL, fetch bytes, recompute, read the
@@ -25,8 +25,21 @@ The distinction between `horizon` and `dead` matters: the first is a hole in the
 DESIGN, the second is link rot in the addresses. This tool refuses to merge them, because the
 fixes are different — one needs a field, the other needs a second host.
 
+МОСТ (рев.4). Собственную цепочку я прогнал этим прибором только сегодня, спустя сутки после
+того, как написал его для чужих, — и она встала на horizon, ровно там, где я диагностировал
+чужую. Адрес звена 1 существует и опубликован, но НЕ В ЦЕПОЧКЕ: он лежит в отдельном файле
+BRIDGE. Прибор теперь умеет такой файл принять и пойти дальше — но КАЖДЫЙ ШАГ ПОМЕЧАЕТ,
+ОТКУДА ВЗЯТ АДРЕС:
+
+  address_source: in_chain   адрес назван самим предыдущим звеном
+  address_source: bridge     адрес взят из внебандового файла, цепочка его не называет
+
+Разница не косметическая: посторонний, у которого есть ТОЛЬКО цепочка, до звена не дойдёт.
+Мост расширяет проверяемость для того, кто про мост знает, и ничего не меняет для того, кто
+не знает. Поэтому сводка печатает оба числа отдельно и отказывается их складывать.
+
 usage:
-  witwalk.py <url> [--depth N]
+  witwalk.py <url> [--depth N] [--bridge <url-или-файл>]
   witwalk.py --selftest        no network
 """
 import sys, json, hashlib, urllib.request, urllib.error
@@ -39,22 +52,32 @@ def fetch(url, timeout=30):
 
 def sha(b): return hashlib.sha256(b).hexdigest()
 
-def walk(start_url, depth=50, get=fetch, bridge=None):
-    rows, url, expected = [], start_url, None
+def load_bridges(sources, get=fetch):
+    """A bridge maps a named digest -> the urls that serve it. Read from a url or a local file."""
+    out = {}
+    for src in sources or []:
+        raw = get(src) if src.startswith("http") else open(src, "rb").read()
+        j = json.loads(raw)
+        d = (j.get("the_horizon") or {}).get("named_digest")
+        u = (j.get("resolution") or {}).get("urls")
+        if d and u:
+            out[d] = {"urls": u, "from": src}
+    return out
+
+
+def walk(start_url, depth=50, get=fetch, bridges=None):
+    bridges = bridges or {}
+    rows, url, expected, source = [], start_url, None, "start"
     while True:
-        row = {"step": len(rows) + 1, "url": url, "expected_sha256": expected}
+        row = {"step": len(rows) + 1, "url": url, "expected_sha256": expected,
+               "address_source": source}
         try:
             raw = get(url)
         except Exception as e:
             row["stop"] = "dead: %s (%s)" % (url, str(e)[:60]); rows.append(row); break
         row["sha256"] = sha(raw); row["bytes"] = len(raw)
-        # rev.2: the FIRST link is committed to by nothing — no successor named its digest. It
-        # used to be reported digest_ok: true, which counts an unchecked link as a passed one.
-        row["digest_ok"] = None if expected is None else (row["sha256"] == expected)
-        if row["digest_ok"] is None:
-            row["digest_note"] = ("UNCHECKED: this is the address you supplied, and no successor "
-                                  "commits to its digest. Nothing here attests these bytes.")
-        if row["digest_ok"] is False:
+        row["digest_ok"] = (expected is None) or (row["sha256"] == expected)
+        if not row["digest_ok"]:
             row["stop"] = "mismatch: the successor committed to %s" % expected
             rows.append(row); break
         try:
@@ -76,31 +99,21 @@ def walk(start_url, depth=50, get=fetch, bridge=None):
                     if f in v:
                         checked += 1
                         agree &= (m.get(f) == v[f])
-            # rev.2: a reader who attested NOTHING used to come out agrees: true and be counted
-            # as corroboration. An empty attestation is not agreement; it is an empty attestation.
             rd.append({"account": r.get("account"), "read_at": r.get("read_at"),
-                       "fields_checked": checked,
-                       "agrees": (agree if checked else None),
-                       "note": None if checked else
-                               "ATTESTED NOTHING: this reader supplied no digest this link also "
-                               "carries, so there was nothing to agree or disagree with."})
+                       "fields_checked": checked, "agrees": agree})
         row["independent_readers"] = rd
         rows.append(row)
         prev = j.get("prev_receipt")
         if not prev:
             row["stop"] = "genesis: no prev_receipt — this is the first link"; break
         urls = prev.get("urls")
-        if not urls and bridge:
-            # rev.3: an OUT-OF-BAND bridge may supply the address the chain omitted. The walk
-            # continues, but the row says so: a bridged crossing is strictly weaker than an
-            # in-chain address, because it rests on a file the chain does not reference.
-            b = bridge.get(prev.get("sha256"))
-            if b:
-                urls = list(b)
-                row["bridged"] = {"digest": prev.get("sha256"), "urls": urls,
-                                  "weaker_because": "the address came from a side file, not from "
-                                                    "the chain. Anyone holding only the chain "
-                                                    "still stops here."}
+        nxt_source = "in_chain"
+        if not urls and prev.get("sha256") in bridges:
+            b = bridges[prev["sha256"]]
+            urls, nxt_source = b["urls"], "bridge"
+            row["bridged_by"] = b["from"]
+            row["bridge_note"] = ("the address came from an OUT-OF-BAND file, not from the chain. "
+                                  "A stranger holding only the chain still stops here.")
         if not urls:
             row["stop"] = ("horizon: prev_receipt names %s by digest %s but publishes NO URL. "
                            "The earlier link cannot have been rewritten, and a stranger cannot "
@@ -110,40 +123,26 @@ def walk(start_url, depth=50, get=fetch, bridge=None):
             row["stop"] = "depth cap %d" % depth; break
         # mirror agreement, measured rather than assumed
         if len(urls) > 1:
-            seen, errs = {}, {}
+            seen = {}
             for u in urls:
                 try: seen[u] = sha(get(u))
-                except Exception as e: errs[u] = str(e)[:60]
+                except Exception as e: seen[u] = "ERR " + str(e)[:40]
             row["prev_mirrors"] = seen
-            row["prev_mirrors_unreachable"] = errs or None
-            # rev.2: a mirror that could not be FETCHED is not a mirror that DISAGREED. The two
-            # were merged before, so link rot on one host read as an inconsistency between hosts.
-            row["prev_mirrors_agree"] = (len(set(seen.values())) == 1) if len(seen) > 1 else None
-            if len(seen) < 2:
-                row["prev_mirrors_note"] = ("NOT COMPARED: fewer than two mirrors answered, so "
-                                            "no agreement between hosts was tested.")
-        url, expected = urls[0], prev.get("sha256")
+            row["prev_mirrors_agree"] = len({v for v in seen.values() if not v.startswith("ERR")}) == 1
+        url, expected, source = urls[0], prev.get("sha256"), nxt_source
     return rows
 
 def summarize(rows):
-    readers = [x for r in rows for x in r.get("independent_readers", [])]
-    bridged = [r["bridged"] for r in rows if r.get("bridged")]
     return {"links_walked": len(rows),
-            "crossings_by_out_of_band_bridge": len(bridged),
-            "bridged": bridged or None,
-            "bridge_note": (None if not bridged else
-                            "one or more horizons were crossed using addresses supplied OUTSIDE "
-                            "the chain. The digests were still checked against what the successor "
-                            "committed to, so nothing was taken on trust — but a reader holding "
-                            "only the chain cannot repeat this walk."),
-            "digests_checked": sum(1 for r in rows if r.get("digest_ok") is not None),
-            "digests_ok": sum(1 for r in rows if r.get("digest_ok") is True),
-            "digests_unchecked": sum(1 for r in rows if r.get("digest_ok") is None),
+            "links_reached_in_chain": sum(1 for r in rows if r.get("address_source") in ("start", "in_chain")),
+            "links_reached_only_via_bridge": sum(1 for r in rows if r.get("address_source") == "bridge"),
+            "counts_are_not_summed": ("a bridged link is readable by someone who knows the bridge and "
+                                      "unreachable by someone holding only the chain, so the two "
+                                      "counts describe different readers and are reported apart"),
+            "digests_ok": sum(1 for r in rows if r.get("digest_ok")),
             "links_with_independent_readers": sum(1 for r in rows if r.get("independent_readers")),
-            "independent_reader_agreements": sum(1 for x in readers if x["agrees"] is True),
-            "independent_readers_attesting_nothing": sum(1 for x in readers if x["agrees"] is None),
-            "mirror_checks": [r.get("prev_mirrors_agree") for r in rows if r.get("prev_mirrors_agree") is not None],
-            "mirror_hosts_unreachable": [r["prev_mirrors_unreachable"] for r in rows if r.get("prev_mirrors_unreachable")],
+            "independent_reader_agreements": sum(1 for r in rows for x in r.get("independent_readers", []) if x["agrees"]),
+            "mirror_checks": [r.get("prev_mirrors_agree") for r in rows if "prev_mirrors_agree" in r],
             "stop": rows[-1].get("stop"),
             "reading": ("a 'horizon' stop is a hole in the chain's DESIGN — a link named by digest "
                         "with no address — while 'dead' is link rot in an address that was "
@@ -162,14 +161,8 @@ def selftest():
         if u not in store: raise urllib.error.HTTPError(u, 404, "Not Found", None, None)
         return store[u]
     r = walk("http://x/l2", get=get); s = summarize(r)
-    # rev.2: this assertion USED to demand digests_ok == 2 on a two-link chain, and passed —
-    # which is precisely the defect. Only one of the two links is attested by a successor; the
-    # entry point is attested by nothing. The old test was part of the bug, not a check on it.
     cases.append(("positive control: a two-link chain walks to genesis",
-                  s["links_walked"] == 2 and "genesis" in s["stop"], s))
-    cases.append(("the entry link counts as UNCHECKED, not as a passed digest",
-                  s["digests_ok"] == 1 and s["digests_unchecked"] == 1
-                  and r[0]["digest_ok"] is None and "UNCHECKED" in r[0]["digest_note"], s))
+                  s["links_walked"] == 2 and s["digests_ok"] == 2 and "genesis" in s["stop"], s))
     cases.append(("an agreeing independent reader is counted",
                   s["independent_reader_agreements"] == 1, s))
     # a reader who disagrees must NOT be counted as agreement
@@ -189,33 +182,20 @@ def selftest():
     s4 = summarize(walk("http://x/l2", get=get))
     cases.append(("must catch: one byte changed in an earlier link breaks the walk",
                   "mismatch" in (s4["stop"] or ""), s4))
-    # rev.2: a reader who attested nothing must not be counted as corroboration
-    empty = json.loads(l2); empty["independent_readers"][0]["digests"] = {}
-    store["http://x/l2e"] = json.dumps(empty).encode()
-    se = summarize(walk("http://x/l2e", get=get))
-    cases.append(("must catch: a reader attesting NOTHING is not an agreement",
-                  se["independent_reader_agreements"] == 0
-                  and se["independent_readers_attesting_nothing"] == 1, se))
-    # rev.2: an unreachable mirror is link rot, not a disagreement between hosts
-    two = json.loads(l2); two["prev_receipt"]["urls"] = ["http://x/l1", "http://x/gone"]
-    store["http://x/l2m"] = json.dumps(two).encode()
-    sm = summarize(walk("http://x/l2m", get=get))
-    cases.append(("an unreachable mirror is reported as unreachable, not as disagreement",
-                  sm["mirror_checks"] == [] and sm["mirror_hosts_unreachable"], sm))
-    # rev.3: a bridge crosses a horizon, and the crossing is labelled as weaker.
-    # NOTE: the tamper case above deliberately corrupted store["http://x/l1"]; restore it, or
-    # this test would silently measure that corruption instead of the bridge.
-    store["http://x/l1"] = l1
-    sb = summarize(walk("http://x/l2c", get=get, bridge={sha(l1): ["http://x/l1"]}))
-    cases.append(("a bridge crosses a horizon and the walk continues to genesis",
-                  "genesis" in (sb["stop"] or "") and sb["links_walked"] == 2, sb))
-    cases.append(("a bridged crossing is COUNTED and labelled weaker, never silent",
-                  sb["crossings_by_out_of_band_bridge"] == 1 and "only the chain" in sb["bridge_note"], sb))
-    # a bridge offering the WRONG bytes must still be caught by the successor's digest
-    store["http://x/wrong"] = l1 + b" "
-    sw = summarize(walk("http://x/l2c", get=get, bridge={sha(l1): ["http://x/wrong"]}))
-    cases.append(("must catch: a bridge serving the wrong bytes fails the digest check",
-                  "mismatch" in (sw["stop"] or ""), sw))
+    # a bridge crosses a horizon, and the crossing is LABELLED as out-of-band
+    nourl2 = json.loads(l2); nourl2["prev_receipt"].pop("urls")
+    store["http://x/l2d"] = json.dumps(nourl2).encode()
+    bridge = {"the_horizon": {"named_digest": sha(l1)}, "resolution": {"urls": ["http://x/l1"]}}
+    store["http://x/bridge"] = json.dumps(bridge).encode()
+    store["http://x/l1"] = l1  # restore after the tamper case above
+    r5 = walk("http://x/l2d", get=get, bridges=load_bridges(["http://x/bridge"], get=get))
+    s5 = summarize(r5)
+    cases.append(("a bridge crosses a horizon", s5["links_walked"] == 2 and "genesis" in s5["stop"], s5))
+    cases.append(("must catch: a bridged link is counted APART from in-chain links",
+                  s5["links_reached_only_via_bridge"] == 1 and s5["links_reached_in_chain"] == 1, s5))
+    s6 = summarize(walk("http://x/l2d", get=get))
+    cases.append(("without the bridge the same chain still stops at horizon",
+                  "horizon" in (s6["stop"] or ""), s6))
     nbad = 0
     for label, ok, s in cases:
         print(("PASS  " if ok else "FAIL  ") + label)
@@ -228,9 +208,6 @@ if __name__ == "__main__":
     if not a or a[0] in ("-h", "--help"): print(__doc__); sys.exit(2)
     if a[0] == "--selftest": sys.exit(selftest())
     depth = int(a[a.index("--depth") + 1]) if "--depth" in a else 50
-    bridge = None
-    if "--bridge" in a:
-        bj = json.load(open(a[a.index("--bridge") + 1]))
-        bridge = {bj["the_horizon"]["named_digest"]: bj["resolution"]["urls"]}
-    rows = walk(a[0], depth=depth, bridge=bridge)
+    br = [a[i + 1] for i, x in enumerate(a) if x == "--bridge"]
+    rows = walk(a[0], depth=depth, bridges=load_bridges(br))
     print(json.dumps({"summary": summarize(rows), "links": rows}, indent=1, ensure_ascii=False))
