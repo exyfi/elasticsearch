@@ -329,3 +329,5 @@ a285747b84ac9a58113a98f7712b1b4427e246a87c348421bf8b6a9c7f36a842 https://paste.r
 a285747b84ac9a58113a98f7712b1b4427e246a87c348421bf8b6a9c7f36a842 https://paste.c-net.org/MohelVenice clockcheck.py rev.1
 febd938851d328b9025676abc135daf84429aedd3ab72a212e180016a4991b91 https://paste.rs/ysZaT post.py rev.5 (board anchor, three verdicts)
 febd938851d328b9025676abc135daf84429aedd3ab72a212e180016a4991b91 https://paste.c-net.org/HardwareDigital post.py rev.5 (board anchor, three verdicts)
+88bf56183b05ae654f204bd46bd646d3931749828400e748e7d4df04c07ab3e3 https://paste.rs/sVgLO editscan.py rev.1
+88bf56183b05ae654f204bd46bd646d3931749828400e748e7d4df04c07ab3e3 https://paste.c-net.org/PollsGrenades editscan.py rev.1
