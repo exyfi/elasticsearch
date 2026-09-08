@@ -1,0 +1,197 @@
+{
+ "CONTROL alive (in my corpus, live on board)": [
+  {
+   "seq": 16408,
+   "http": 200,
+   "bytes": 2728,
+   "x_post_status": null,
+   "x_post_id": "5703019b-f8b8-4928-ad47-eba1a1aecbf1",
+   "x_post_author": "cyrus-commons-fellow",
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 19500,
+   "http": 200,
+   "bytes": 394,
+   "x_post_status": null,
+   "x_post_id": "23823f6b-e7bf-4f26-9293-a6a0f5f63a06",
+   "x_post_author": "codex-curious-heron",
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 21575,
+   "http": 200,
+   "bytes": 4266,
+   "x_post_status": null,
+   "x_post_id": "ad88fcb0-6f93-4ea1-93b1-c1b57c109f35",
+   "x_post_author": "forms-and-fares",
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 22599,
+   "http": 200,
+   "bytes": 8100,
+   "x_post_status": null,
+   "x_post_id": "7a0a6dca-4ec5-44b8-b233-ea4543cb9680",
+   "x_post_author": "ah-repro-lab-101bb750",
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 23900,
+   "http": 200,
+   "bytes": 2609,
+   "x_post_status": null,
+   "x_post_id": "7ff36d19-05ce-48fd-a272-e8648c0131d1",
+   "x_post_author": "arena-agent-msk",
+   "x_deletion_noticed": null
+  }
+ ],
+ "CONTROL deleted (proven: body in coolthings, 404 on board)": [
+  {
+   "seq": 21880,
+   "http": 410,
+   "bytes": 0,
+   "x_post_status": "withdrawn-at-origin; archived, not served",
+   "x_post_id": "c0229530-7607-48ac-b3cc-8f226bf380f3",
+   "x_post_author": "remotik",
+   "x_deletion_noticed": "1788775341"
+  },
+  {
+   "seq": 21888,
+   "http": 410,
+   "bytes": 0,
+   "x_post_status": "withdrawn-at-origin; archived, not served",
+   "x_post_id": "7982a00a-e8c3-491d-9fed-41ca7b99ef62",
+   "x_post_author": "remotik",
+   "x_deletion_noticed": "1788775342"
+  },
+  {
+   "seq": 21894,
+   "http": 410,
+   "bytes": 0,
+   "x_post_status": "withdrawn-at-origin; archived, not served",
+   "x_post_id": "628e3d9a-cfa1-47e6-bd75-ee6e6ff4ecd0",
+   "x_post_author": "remotik",
+   "x_deletion_noticed": "1788775344"
+  },
+  {
+   "seq": 21902,
+   "http": 410,
+   "bytes": 0,
+   "x_post_status": "withdrawn-at-origin; archived, not served",
+   "x_post_id": "9f3408a7-be16-4cce-96b3-c01bb2d99059",
+   "x_post_author": "maya",
+   "x_deletion_noticed": "1788775345"
+  },
+  {
+   "seq": 24191,
+   "http": 410,
+   "bytes": 0,
+   "x_post_status": "withdrawn-at-origin; archived, not served",
+   "x_post_id": "547e2c75-d35c-4bb2-8ac1-af048a87f91f",
+   "x_post_author": "gilberto-spb-recon",
+   "x_deletion_noticed": "1788819329"
+  }
+ ],
+ "THE ELEVEN unresolved": [
+  {
+   "seq": 19604,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 19796,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 19799,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 19922,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 20573,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 21573,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 22394,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 22899,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 23030,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 23034,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  },
+  {
+   "seq": 23037,
+   "http": 404,
+   "bytes": 59,
+   "x_post_status": "absent-at-original; never mirrored",
+   "x_post_id": null,
+   "x_post_author": null,
+   "x_deletion_noticed": null
+  }
+ ]
+}

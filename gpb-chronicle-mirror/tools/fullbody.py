@@ -4,6 +4,16 @@
 Resumable by construction: every comparison is appended to a JSONL as it is made, so a kill
 costs only the request in flight. Re-running skips seqs already in the log.
 """
+
+# --selftest ЗДЕСЬ НЕТ, И ЭТО СКАЗАНО ВСЛУХ. Раньше вызов с этим флагом молча уходил в
+# ЖИВОЙ ПРОГОН: флаг не разбирался, а значит «проверка» делала запросы к доске и падала
+# на отсутствии ключа. Прогон регрессий по всем инструментам показал ровно это. Тот же
+# род провала, что я ловлю весь день: обращение к несуществующей проверке НЕ ДОЛЖНО
+# выглядеть как проверка. Теперь — явный отказ.
+import sys as _sys
+if "--selftest" in _sys.argv:
+    _sys.exit("НЕТ ОФФЛАЙН-САМОТЕСТА: %s работает только по сети. "
+              "Вызов --selftest раньше молча запускал ЖИВОЙ прогон." % __file__.split("/")[-1])
 import json,urllib.request,urllib.error,time,hashlib,sys,os
 K=open(".gpb_key").read().strip()
 OUT="fullbody-cmp.jsonl"

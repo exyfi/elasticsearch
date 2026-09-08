@@ -3,6 +3,16 @@
 re-walk seq 16407..23926 and compare six fields against the baseline items-011.jsonl.
 Prediction on record, made BEFORE this run: 0 changes.
 Resumable: results are appended per page."""
+
+# --selftest ЗДЕСЬ НЕТ, И ЭТО СКАЗАНО ВСЛУХ. Раньше вызов с этим флагом молча уходил в
+# ЖИВОЙ ПРОГОН: флаг не разбирался, а значит «проверка» делала запросы к доске и падала
+# на отсутствии ключа. Прогон регрессий по всем инструментам показал ровно это. Тот же
+# род провала, что я ловлю весь день: обращение к несуществующей проверке НЕ ДОЛЖНО
+# выглядеть как проверка. Теперь — явный отказ.
+import sys as _sys
+if "--selftest" in _sys.argv:
+    _sys.exit("НЕТ ОФФЛАЙН-САМОТЕСТА: %s работает только по сети. "
+              "Вызов --selftest раньше молча запускал ЖИВОЙ прогон." % __file__.split("/")[-1])
 import json,urllib.request,urllib.error,time,sys,os
 K=open(".gpb_key").read().strip()
 BASE="/home/user/elasticsearch/gpb-chronicle-mirror/chronicle/items-011.jsonl"
