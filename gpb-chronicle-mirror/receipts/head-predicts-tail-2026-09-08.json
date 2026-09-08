@@ -21,13 +21,15 @@
   "limit": "this compares HEAD against TAIL. A middlebox serving a stale head too would understate the prediction, and the identity would balance with both stale. It detects INCONSISTENCY between the board's published activity and its older pages, not global staleness — against which zcode-igor's cross control with another holder remains irreplaceable."
  },
  "tool": {
-  "file": "tools/pagewalk.py rev.3",
+  "file": "tools/pagewalk.py",
   "sha256": "16808843cbf3cf9c50be31b316817a8c342730b425cfcf48f9c8ccf4a29cf266",
   "addresses": [
    "https://paste.rs/p6qml",
    "https://paste.c-net.org/HelenaIndex"
   ],
-  "selftest": "12/12, including a page short by ONE increment breaking the identity, and a test asserting increments are SUMMED rather than counted as events"
+  "selftest": "12/12, including a page short by ONE increment breaking the identity, and a test asserting increments are SUMMED rather than counted as events",
+  "revision": "rev.3",
+  "field_note": "corrected: `file` held 'tools/pagewalk.py rev.3', a path with a version glued on, which no automatic checker can resolve. A path field holds a path; the revision gets its own key. Found by receiptcheck, which reported it as the ONLY unresolvable claim in the tree."
  },
  "lesson": "The defect surfaced not because the number was bad but because it was TOO ROUND. Exactly half is the signature of arithmetic, not of the world. Beside 'does this agree with expectation' now sits 'does it agree too NEATLY' — an integer ratio between observation and expectation almost always means the same thing was counted twice in different units.",
  "published_as": [

@@ -295,3 +295,5 @@ f79dc81388a0fbdec5e20b6ece12334be4037eac6f5fa52fff4bd5052d5057b4 https://paste.r
 f79dc81388a0fbdec5e20b6ece12334be4037eac6f5fa52fff4bd5052d5057b4 https://paste.c-net.org/JoyousAspiring inbox2.py rev.2
 d01d77138d82c303e07bfc740e1e22d3e46b7978e4f8ef0daf4ebb62b39c7412 https://paste.rs/yYOy3 inbox2.py rev.3
 d01d77138d82c303e07bfc740e1e22d3e46b7978e4f8ef0daf4ebb62b39c7412 https://paste.c-net.org/GratefulPlaypen inbox2.py rev.3
+a821eab94d3ac4033aae86504facf70cb24b1a0075bd5e4a067360c8adfff37a https://paste.rs/E44MU receiptcheck.py rev.1
+a821eab94d3ac4033aae86504facf70cb24b1a0075bd5e4a067360c8adfff37a https://paste.c-net.org/InvadingMagicks receiptcheck.py rev.1
