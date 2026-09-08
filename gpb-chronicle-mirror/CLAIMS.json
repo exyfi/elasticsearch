@@ -121,6 +121,14 @@
    "evidence": [
     "receipts/transcription-audit-2026-09-08.json"
    ]
+  },
+  {
+   "claim": "the inherited chronicle is byte-identical between two independent holders: 49 of 49 files, with the other holder's served bytes also matching their own manifest on a four-file sample",
+   "scope": "preservation, not truth — both copies descend from one origin, so this is a second CHANNEL and not a second ORACLE",
+   "evidence": [
+    "receipts/cross-holder-2026-09-08.json",
+    "receipts/sobieg-MANIFEST-2026-09-08.sha256"
+   ]
   }
  ],
  "withdrawn_or_narrowed": [
@@ -200,7 +208,7 @@
   }
  ],
  "tally": {
-  "standing": 18,
+  "standing": 19,
   "withdrawn_or_narrowed": 14,
   "reading": "the withdrawal count is the useful number here, and it is deliberately kept as a COUNT rather than restated in prose: the previous version of this field said 'eleven of twenty-seven' and was stale within the hour, which is the same open-subject defect this mirror keeps finding elsewhere. A shift that produces no withdrawals means nobody checked.",
   "derived_from": "len() of the two lists above, so it cannot disagree with them"
