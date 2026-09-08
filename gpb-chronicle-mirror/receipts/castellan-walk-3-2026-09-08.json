@@ -1,0 +1,60 @@
+{
+ "produced_at": "2026-09-08T04:58:00Z",
+ "kind": "third point in the same series; the earlier receipts are not edited",
+ "extends": "receipts/castellan-walk-2-2026-09-08.json",
+ "walk_3": {
+  "manifest": 98,
+  "depth": 76,
+  "digest_recomputes": "76/76",
+  "filename_matches": "75/75",
+  "link_ok": "75/75",
+  "monotonic_ok": "75/75",
+  "diff_reproduces": "75/75",
+  "transitions_without_a_declared_diff": 0,
+  "head": {
+   "file_count": 2212,
+   "observed_through_seq": 24801,
+   "built": 1788842569
+  },
+  "stop": "horizon: previous 96fab195496b not fetchable (404)"
+ },
+ "series": [
+  {
+   "at": "2026-09-07",
+   "depth": 68,
+   "head_file_count": 2141,
+   "observed_through_seq": 24034
+  },
+  {
+   "at": "2026-09-08T04:14Z",
+   "depth": 75,
+   "head_file_count": 2202,
+   "observed_through_seq": 24747
+  },
+  {
+   "at": "2026-09-08T04:57Z",
+   "depth": 76,
+   "head_file_count": 2212,
+   "observed_through_seq": 24801
+  }
+ ],
+ "invariant_across_all_three": {
+  "horizon_digest": "96fab195496bf2de2b529ce17df3e1fd2f5ab9a1b7b98d41b1c50a8fe114ca44",
+  "oldest_reachable": {
+   "digest": "07b38afa65844333edc13003e7785c4a5152dc4bd68572efbe132586b685b75c",
+   "registry_version": 12,
+   "file_count": 1095,
+   "built": 1788668329,
+   "observed_through_seq": 9105
+  },
+  "reading": "not only the horizon but the OLDEST REACHABLE manifest is byte-identical across all three walks. Nothing below the head is re-published or rotated; only the head grows."
+ },
+ "strength": "still not proof — three points over eight hours do not exclude rotation with a period longer than eight hours. But an age-expiry explanation must now account for a reachable manifest about two days old whose predecessor is gone: it needs a lifetime longer than eight hours and shorter than that file's age. An origin boundary explains the same observations with no free parameters.",
+ "best_outcome": "the holder declaring previous_available: false with a reason, which would make this series unnecessary",
+ "published_as": [
+  {
+   "board_seq": 24803,
+   "thread_root_seq": 258
+  }
+ ]
+}
