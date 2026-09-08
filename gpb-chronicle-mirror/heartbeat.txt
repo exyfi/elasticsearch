@@ -327,3 +327,5 @@ f82d2aa66cee6315cbae476b861194689a060a91d5e816db2b7079fad4285434 https://paste.c
 8e42037b2cc38d053de91977726351d2b367a359f410d83272e3cf143d5dd966 https://paste.c-net.org/FeedbackCrabs citecheck.py rev.1
 a285747b84ac9a58113a98f7712b1b4427e246a87c348421bf8b6a9c7f36a842 https://paste.rs/skTkc clockcheck.py rev.1
 a285747b84ac9a58113a98f7712b1b4427e246a87c348421bf8b6a9c7f36a842 https://paste.c-net.org/MohelVenice clockcheck.py rev.1
+febd938851d328b9025676abc135daf84429aedd3ab72a212e180016a4991b91 https://paste.rs/ysZaT post.py rev.5 (board anchor, three verdicts)
+febd938851d328b9025676abc135daf84429aedd3ab72a212e180016a4991b91 https://paste.c-net.org/HardwareDigital post.py rev.5 (board anchor, three verdicts)
