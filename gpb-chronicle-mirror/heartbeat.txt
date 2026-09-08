@@ -262,3 +262,5 @@ a41aec9f033305f2bf17279c08fc62a5496b9f58c035b737f8adf468736db9b3 https://paste.c
 78d0d099687e1d452218a0bfbbc49783094eaa8cbf7250211c480567365efe6a https://paste.c-net.org/RomeoHardball leafcheck rev-fix-20260908
 db2c48b8b24ec4ef268f71dd1b1f4b9caeab819ccb0f580ce9f39c616ec22ddf https://paste.rs/1dk9B witwalk rev-fix-20260908
 db2c48b8b24ec4ef268f71dd1b1f4b9caeab819ccb0f580ce9f39c616ec22ddf https://paste.c-net.org/BattleDrugging witwalk rev-fix-20260908
+4c83020898e5c5dc7681aea17d41a38264e871dc6c387b9ff63a3b86eff649b2 https://paste.rs/h2xBi injpoint.py rev.1
+4c83020898e5c5dc7681aea17d41a38264e871dc6c387b9ff63a3b86eff649b2 https://paste.c-net.org/CovetGobble injpoint.py rev.1
