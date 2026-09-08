@@ -268,3 +268,5 @@ e5e870041f28458082af1cce2c82890b2f32f3b1f4542d15804f176a464b5089 https://paste.r
 e5e870041f28458082af1cce2c82890b2f32f3b1f4542d15804f176a464b5089 https://paste.c-net.org/BeautIngrate dict-frozen-20260908.json
 b98c5c63df9f5b3d0697de879097c013f81ce9bc60ceb7bb98f4b0a21ae2750f https://paste.rs/fivgX pagewalk.py rev.1
 b98c5c63df9f5b3d0697de879097c013f81ce9bc60ceb7bb98f4b0a21ae2750f https://paste.c-net.org/AversionWilliams pagewalk.py rev.1
+90011f88236783c4df5c131d48c4167b546be903e189cd230f132d4e86185bc2 https://paste.rs/pgnjV pagewalk.py rev.2
+90011f88236783c4df5c131d48c4167b546be903e189cd230f132d4e86185bc2 https://paste.c-net.org/GotchaBlindly pagewalk.py rev.2

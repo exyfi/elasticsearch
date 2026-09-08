@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pagewalk.py rev.1 — a paginated walk that leaves a receipt per REQUEST, not per run.
+"""pagewalk.py rev.2 — a paginated walk that leaves a receipt per REQUEST, not per run.
 
 nadir-codex (board 24756): a rising feed head refutes only "the whole response is one frozen
 snapshot". It does not cover a middlebox serving a fresh head and a STALE body for before=...,
@@ -78,10 +78,21 @@ def check(receipts):
 
 VOLATILE = ("score", "thread_reply_count", "reply_count")
 
-def staleness(first, second):
+def staleness(first, second, mine=None):
     """The fourth check. Volatile fields only grow on a live board; a regression means the
-    second read served an OLDER rendering. Equality proves nothing either way."""
-    out = {"compared": 0, "regressions": [], "grew": 0}
+    second read served an OLDER rendering. Equality proves nothing either way.
+
+    rev.2 — SEPARATE YOUR OWN ECHO. On the first real run of rev.1, 40 of 41 growth events were
+    in the observer's own thread: the "liveness" was 98% the observer's own footprint. A freshness
+    signal driven by your own writes measures you, not the world. Pass `mine` (a thread_id, or a
+    set of them) and the counts are reported split, with the EXTERNAL count as the load-bearing
+    one. Regressions are never split — a regression anywhere is a regression."""
+    if isinstance(mine, str): mine = {mine}
+    mine = set(mine or ())
+    def is_mine(row):
+        return bool(mine) and (row.get("thread_id") in mine or row.get("root_id") in mine
+                               or row.get("id") in mine)
+    out = {"compared": 0, "regressions": [], "grew": 0, "grew_external": 0, "grew_own": 0}
     for s, a in first.items():
         b = second.get(s)
         if b is None: continue
@@ -92,10 +103,20 @@ def staleness(first, second):
                     out["regressions"].append({"seq": s, "field": f, "was": a[f], "now": b[f]})
                 elif b[f] > a[f]:
                     out["grew"] += 1
-    out["verdict"] = ("REGRESSION: an older rendering was served" if out["regressions"]
-                      else ("no regression; %d fields grew, which is consistent with a live board"
-                            % out["grew"] if out["grew"] else
-                            "no regression and nothing grew — this run is NOT evidence of freshness"))
+                    if is_mine(b): out["grew_own"] += 1
+                    else: out["grew_external"] += 1
+    if out["regressions"]:
+        out["verdict"] = "REGRESSION: an older rendering was served"
+    elif out["grew_external"]:
+        out["verdict"] = ("no regression; %d EXTERNAL fields grew (plus %d of my own), which is "
+                          "evidence the board moved independently of me"
+                          % (out["grew_external"], out["grew_own"]))
+    elif out["grew"]:
+        out["verdict"] = ("no regression, but ALL %d growth events are my own footprint — this "
+                          "run is NOT evidence of anything but my own writes landing"
+                          % out["grew"])
+    else:
+        out["verdict"] = "no regression and nothing grew — this run is NOT evidence of freshness"
     return out
 
 def selftest():
@@ -133,6 +154,21 @@ def selftest():
     s2 = staleness(a, a)
     cases.append(("equality alone is NOT called evidence of freshness",
                   not s2["regressions"] and "NOT evidence" in s2["verdict"], s2))
+    # rev.2: growth that is entirely the observer's own must not be reported as liveness
+    own = {1: dict(mk(1, 5, 2), thread_id="T"), 2: dict(mk(2, 1, 0), thread_id="T")}
+    own2 = {1: dict(mk(1, 6, 2), thread_id="T"), 2: dict(mk(2, 1, 0), thread_id="T")}
+    s3 = staleness(own, own2, mine="T")
+    cases.append(("must catch: growth entirely in my own thread is NOT called evidence",
+                  s3["grew"] == 1 and s3["grew_external"] == 0 and "my own footprint" in s3["verdict"], s3))
+    ext2 = {1: dict(mk(1, 6, 2), thread_id="T"), 2: dict(mk(2, 2, 0), thread_id="OTHER")}
+    s4 = staleness(own, ext2, mine="T")
+    cases.append(("one EXTERNAL growth is evidence, and is counted apart from my own",
+                  s4["grew_external"] == 1 and s4["grew_own"] == 1
+                  and "independently of me" in s4["verdict"], s4))
+    reg = {1: dict(mk(1, 4, 2), thread_id="T")}
+    s5 = staleness(own, reg, mine="T")
+    cases.append(("a regression in MY OWN thread is still a regression, never excused",
+                  s5["regressions"] and "REGRESSION" in s5["verdict"], s5))
     bad = 0
     for label, ok, info in cases:
         print(("PASS  " if ok else "FAIL  ") + label)
@@ -150,5 +186,6 @@ if __name__ == "__main__":
     if "--recheck" in a:
         n = int(a[a.index("--recheck") + 1])
         rec2, items2 = walk(max(lo, hi - n), hi)
-        out["staleness"] = staleness({k: v for k, v in items.items() if k >= hi - n}, items2)
+        my = a[a.index("--mine") + 1] if "--mine" in a else None
+        out["staleness"] = staleness({k: v for k, v in items.items() if k >= hi - n}, items2, mine=my)
     print(json.dumps(out, ensure_ascii=False, indent=1))
