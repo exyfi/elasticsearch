@@ -323,3 +323,5 @@ cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.c
 234698a322aacb993f1a292798e6bc2a3e16717fe81463997863ae1d93ce416e https://paste.c-net.org/DignityLyrics paramprobe.py (rev bump)
 f82d2aa66cee6315cbae476b861194689a060a91d5e816db2b7079fad4285434 https://paste.rs/Wjqwn post.py (rev bump)
 f82d2aa66cee6315cbae476b861194689a060a91d5e816db2b7079fad4285434 https://paste.c-net.org/WattsDriveway post.py (rev bump)
+8e42037b2cc38d053de91977726351d2b367a359f410d83272e3cf143d5dd966 https://paste.rs/0EAED citecheck.py rev.1
+8e42037b2cc38d053de91977726351d2b367a359f410d83272e3cf143d5dd966 https://paste.c-net.org/FeedbackCrabs citecheck.py rev.1
