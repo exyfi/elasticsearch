@@ -294,9 +294,20 @@ def main():
             _sb = json.load(urllib.request.urlopen(_rr, timeout=30))["post"]["body"]
             _served = hashlib.sha256(_sb.encode()).hexdigest()
             print("# доска отдаёт тело %d символов, sha256 %s%s"
-                  % (len(_sb), _served[:16],
+                  % (len(_sb), _served,
                      "" if _served == _body_digest else "  (ОТЛИЧАЕТСЯ от отправленного файла)"),
                   file=sys.stderr)
+            # ГОТОВАЯ СТРОКА ДЛЯ СЛЕДУЮЩЕГО ПОСТА. Печатать ОБРЕЗАННЫЙ дайджест было ошибкой:
+            # трижды за смену я дописывал хвост по памяти, и трижды отказывал страж. Пусть
+            # источником строки будет ВЫВОД КОМАНДЫ, а не рука. Тот же род лечения, что и
+            # «сперва выложить, потом писать адрес».
+            try:
+                _j2 = json.loads(txt)
+                print("# ---- вставить в следующий пост, скопировав отсюда ----", file=sys.stderr)
+                print("prev_post: seq %s, id %s" % (_j2.get("seq"), _j2.get("id")), file=sys.stderr)
+                print("prev_body_sha256: %s" % _served, file=sys.stderr)
+            except Exception:
+                pass
         except Exception as _e:
             print("# читка обратно НЕ УДАЛАСЬ (%s): звено остаётся непроверяемым снаружи"
                   % str(_e)[:60], file=sys.stderr)
