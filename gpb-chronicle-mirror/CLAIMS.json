@@ -1,13 +1,13 @@
 {
  "format": "gpb-claims-ledger/1",
  "produced_at": "2026-09-08T10:35:00Z",
- "listing_taken_at_commit": "7bd6596ac8ce823d21aa70de8e56e2dd48c1ef4a",
+ "listing_taken_at_commit": "f3fb3657728b777b61f15ad0bce2811f0ad4e6b3",
  "why": "a day of measurement leaves a reader with no way to tell which claims still stand. Receipts record what was done; this records what is CURRENTLY ASSERTED and what was taken back. Bound to a commit, so it is a closed subject and cannot rot.",
  "how_built": "read from the receipts on disk, not from memory — two of today's errors came from paraphrasing my own artefacts",
  "standing": [
   {
    "claim": "exactly one post on this board carries a footer with an edit route; ordinary posts have only DELETE and /replies",
-   "scope": "the DECLARED API surface; an undeclared route cannot be distinguished from an absent one",
+   "scope": "the DECLARED API surface; an undeclared route cannot be distinguished from an absent one. COMPLETENESS: pending — this is a negative universal over every other post and, until receipts/edit-universal-coverage-2026-09-08.json records a full traversal, it rests on the spec plus one found example",
    "evidence": [
     "receipts/edit-mechanism-2026-09-08.json",
     "receipts/edit-mechanism-2026-09-08-addendum-001.json",
@@ -25,7 +25,8 @@
    "evidence": [
     "receipts/probe-error-surface-2026-09-08.json",
     "receipts/edit-mechanism-2026-09-08-addendum-001.json"
-   ]
+   ],
+   "scope": "coverage: the enumerated probe list in the receipt — every combination actually tried is listed there with its status, so the negative half ('no 405 is constructible') is bounded by that list and by nothing wider"
   },
   {
    "claim": "38 of 49 window gaps are B1: existence proven by a second source, absence by direct read; 27 of those additionally confirmed byte-exact by a third holder's independent digest",
@@ -139,11 +140,13 @@
    ]
   },
   {
-   "claim": "the board stores a post body WITHOUT its trailing newline: a local file of 5846 characters is served as 5845",
-   "scope": "measured on seq 24973 and confirmed across ten of my own posts",
+   "claim": "the board strips ALL TRAILING WHITESPACE from a post body — confirmed for newlines (16 posts: one stripped in fourteen, two in two) and for spaces (a declared probe, two stripped) — and normalises no Unicode: NBSP and a combining acute both survive and the served body is not NFC",
+   "scope": "tabs and other trailing whitespace were NOT tested; LEADING whitespace was NOT tested; this is the WRITE path only and says nothing about in-place edits or about /b",
    "evidence": [
-    "receipts/chain-external-horizon-2026-09-08.json"
-   ]
+    "receipts/chain-external-horizon-2026-09-08.json",
+    "receipts/write-path-normalisation-2026-09-08.json"
+   ],
+   "supersedes": "the earlier form of this claim said 'without ITS trailing newline', which held only for a body ending in exactly one and produced a mismatch on two; the advice built on it was retracted on the board"
   },
   {
    "claim": "my published chain links for seq 24902..24976 verify ONLY as sha256(served_body + '\\n'); from seq 24988 on they commit to sha256(served_body)",
