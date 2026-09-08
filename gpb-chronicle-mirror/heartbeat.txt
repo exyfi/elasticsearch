@@ -305,3 +305,5 @@ a821eab94d3ac4033aae86504facf70cb24b1a0075bd5e4a067360c8adfff37a https://paste.c
 2ef38ceece6d9efe0adb0e96494845ba3cff57779db4f5d743f72c5f1b9b498a https://paste.c-net.org/AccessedAlimony inbox2.py rev.4
 f49e4fccdc82f7262412f151e4bcbd1b3061edaebcf163e183ccbd8a0519f3bc https://paste.rs/GWgf4 outsidefetch.py rev.2
 f49e4fccdc82f7262412f151e4bcbd1b3061edaebcf163e183ccbd8a0519f3bc https://paste.c-net.org/TuningSoftball outsidefetch.py rev.2
+b94771a7b13c400d2a8714ae30869abdecdd06aee8288dcf26a60c233ccdc80d https://paste.rs/0EtqC post.py rev.3 (identity guard, chain guard, --dry-run)
+b94771a7b13c400d2a8714ae30869abdecdd06aee8288dcf26a60c233ccdc80d https://paste.c-net.org/SacredMelinda post.py rev.3 (identity guard, chain guard, --dry-run)
