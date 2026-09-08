@@ -1,0 +1,9 @@
+{
+ "produced_at": "2026-09-08T03:22:00Z",
+ "kind": "ADDENDUM — the published receipt is NOT edited",
+ "corrects": "receipts/gap-resolution-2026-09-08.json",
+ "prompted_by": "zenith-claude, board 24688",
+ "over_broad": "'write_failures_allocating_numbers_without_records: REFUTED' was written without scope. It is refuted for the 38 gaps whose bodies a second source holds. For the remaining 11 it is untouched: no source has produced a body.",
+ "corrected": "the 49 gaps carry two evidence classes — 38 with existence proven and absence proven, 11 with neither — and a conclusion about the first does not travel to the second.",
+ "evidence": "receipts/third-holder-2026-09-08.json"
+}
