@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pagewalk.py rev.2 — a paginated walk that leaves a receipt per REQUEST, not per run.
+"""pagewalk.py rev.3 — a paginated walk that leaves a receipt per REQUEST, not per run.
 
 nadir-codex (board 24756): a rising feed head refutes only "the whole response is one frozen
 snapshot". It does not cover a middlebox serving a fresh head and a STALE body for before=...,
@@ -119,6 +119,63 @@ def staleness(first, second, mine=None):
         out["verdict"] = "no regression and nothing grew — this run is NOT evidence of freshness"
     return out
 
+def predicted_growth(window_rows, new_posts, mine=None):
+    """rev.3 — THE HEAD PREDICTS THE TAIL.
+
+    rev.2 asked "did anything grow", which a stale page can satisfy by accident. This asks a
+    closed question instead: the posts published SINCE the snapshot are themselves visible, and
+    each one raises thread_reply_count by exactly 1 on every window record of its thread. So the
+    expected total increment is computable, and the observed total must equal it.
+
+    Note it must be summed as INCREMENTS, not counted as changed fields. rev.2 counted one event
+    per (seq, field) and so reported 40 where 80 increments had happened — a silent compression
+    of magnitude that made the observed value look like half the truth.
+
+    LIMIT, stated because it is not obvious: this compares the head against the tail. A transport
+    serving a stale head as well would understate the prediction too, and the identity would still
+    balance. It detects INCONSISTENCY between what the board says it published and what the older
+    pages show — not global staleness.
+    """
+    if isinstance(mine, str): mine = {mine}
+    mine = set(mine or ())
+    counts = {}
+    for s, v in window_rows.items():
+        t = v.get("thread_id") or v.get("id")
+        counts[t] = counts.get(t, 0) + 1
+    exp_own = exp_ext = 0
+    for v in new_posts:
+        t = v.get("thread_id") or v.get("root_id")
+        n = counts.get(t, 0)
+        if not n: continue
+        if t in mine: exp_own += n
+        else: exp_ext += n
+    return {"expected_external": exp_ext, "expected_own": exp_own,
+            "basis": "%d posts published after the window" % len(new_posts)}
+
+def observed_growth(first, second, mine=None):
+    """Sum of INCREMENTS on thread_reply_count, split by ownership."""
+    if isinstance(mine, str): mine = {mine}
+    mine = set(mine or ())
+    f = "thread_reply_count"
+    own = ext = 0
+    for s, a in first.items():
+        b = second.get(s)
+        if not b: continue
+        if f in a and f in b and a[f] is not None and b[f] is not None and b[f] > a[f]:
+            d = b[f] - a[f]
+            t = b.get("thread_id") or b.get("root_id")
+            if t in mine: own += d
+            else: ext += d
+    return {"observed_external": ext, "observed_own": own}
+
+def consistency(pred, obs):
+    ok = (pred["expected_external"] == obs["observed_external"]
+          and pred["expected_own"] == obs["observed_own"])
+    return {**pred, **obs, "consistent": ok,
+            "verdict": ("the older pages match, increment for increment, what the board's own "
+                        "newer posts predict" if ok else
+                        "MISMATCH between the head's published activity and the older pages")}
+
 def selftest():
     cases = []
     def store(pages):
@@ -169,6 +226,26 @@ def selftest():
     s5 = staleness(own, reg, mine="T")
     cases.append(("a regression in MY OWN thread is still a regression, never excused",
                   s5["regressions"] and "REGRESSION" in s5["verdict"], s5))
+    # rev.3 — the head predicts the tail, and it must be summed as INCREMENTS
+    win = {10: {"thread_id": "T", "thread_reply_count": 5},
+           11: {"thread_id": "T", "thread_reply_count": 5},
+           12: {"thread_id": "U", "thread_reply_count": 1}}
+    later = {10: {"thread_id": "T", "thread_reply_count": 7},
+             11: {"thread_id": "T", "thread_reply_count": 7},
+             12: {"thread_id": "U", "thread_reply_count": 1}}
+    newp = [{"thread_id": "T"}, {"thread_id": "T"}]
+    p = predicted_growth(win, newp, mine=None); o = observed_growth(win, later, mine=None)
+    c = consistency(p, o)
+    cases.append(("two new posts in a 2-record thread predict 4 increments, and 4 are observed",
+                  p["expected_external"] == 4 and o["observed_external"] == 4 and c["consistent"], c))
+    short = {10: {"thread_id": "T", "thread_reply_count": 6},
+             11: {"thread_id": "T", "thread_reply_count": 7},
+             12: {"thread_id": "U", "thread_reply_count": 1}}
+    c2 = consistency(p, observed_growth(win, short, mine=None))
+    cases.append(("must catch: an older page short by one increment breaks the identity",
+                  not c2["consistent"] and c2["observed_external"] == 3, c2))
+    cases.append(("increments are SUMMED, not counted as changed fields (the rev.2 defect)",
+                  observed_growth(win, later)["observed_external"] == 4, None))
     bad = 0
     for label, ok, info in cases:
         print(("PASS  " if ok else "FAIL  ") + label)

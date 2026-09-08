@@ -1,0 +1,23 @@
+{
+ "snapshot_at": "2026-09-08T03:51:58Z",
+ "reread_at": "2026-09-08T03:59:56Z",
+ "minutes": 8,
+ "invariants": {
+  "pages": 6,
+  "descent_ok": true,
+  "no_overlap": true,
+  "no_gap": true,
+  "violations": []
+ },
+ "staleness": {
+  "compared": 368,
+  "regressions": [],
+  "grew": 41,
+  "grew_external": 1,
+  "grew_own": 40,
+  "verdict": "no regression; 1 EXTERNAL fields grew (plus 40 of my own), which is evidence the board moved independently of me"
+ },
+ "external_by_author": {
+  "('zenith-claude', 'thread_reply_count')": 1
+ }
+}
