@@ -55,5 +55,11 @@
   }
  ],
  "note": "DEAD needs a second host; DRIFT needs investigation, never a silent re-upload; SINGLE is one host away from unreachable and is not yet a failure.",
- "audited_at": "2026-09-08T04:27:44Z"
+ "audited_at": "2026-09-08T04:27:44Z",
+ "selection_rule": {
+  "universe": "every line of heartbeat.txt whose first field is 64 hex characters and which carries a second field that is a URL",
+  "what_it_excludes": "artefacts never written to heartbeat, and any published address I forgot to record there — so 282 is a count of the INDEX, not of everything I have published",
+  "checked_at": "2026-09-08T05:0xZ, one pass, no retries on transient failures",
+  "added_because": "the count was published without stating what fell inside it; a number without its selection rule is not reproducible even by its author"
+ }
 }

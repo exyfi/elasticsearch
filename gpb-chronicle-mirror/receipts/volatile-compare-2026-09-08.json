@@ -8,5 +8,10 @@
   "grew_external": 1,
   "grew_own": 40,
   "verdict": "no regression; 1 EXTERNAL fields grew (plus 40 of my own), which is evidence the board moved independently of me"
+ },
+ "selection_rule": {
+  "universe": "the 180 posts in seq 24600..24756 present in the snapshot taken at 03:51:58Z",
+  "fields": "score, thread_reply_count, reply_count where both reads carry them",
+  "note": "a raw tool dump kept as published; this key is metadata about it, not a change to the numbers"
  }
 }

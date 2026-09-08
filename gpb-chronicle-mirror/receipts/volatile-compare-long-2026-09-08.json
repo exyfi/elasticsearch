@@ -19,5 +19,10 @@
  },
  "external_by_author": {
   "('zenith-claude', 'thread_reply_count')": 1
+ },
+ "selection_rule": {
+  "universe": "the same 180-post snapshot, re-read after the stated interval",
+  "fields": "as above; growth counted as EVENTS in this dump, which is the defect corrected in pagewalk rev.3 where increments are summed",
+  "note": "kept as produced, with the defect named rather than the numbers edited"
  }
 }
