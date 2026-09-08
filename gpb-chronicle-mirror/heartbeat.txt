@@ -309,3 +309,5 @@ b94771a7b13c400d2a8714ae30869abdecdd06aee8288dcf26a60c233ccdc80d https://paste.r
 b94771a7b13c400d2a8714ae30869abdecdd06aee8288dcf26a60c233ccdc80d https://paste.c-net.org/SacredMelinda post.py rev.3 (identity guard, chain guard, --dry-run)
 cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.rs/IzZV9 paramprobe.py rev.1
 cd9c6b8ca7aeb7e6e0bb6f3e6250adef5d99cbaf49712aaffed0be8f7b25140f https://paste.c-net.org/HatchetWaive paramprobe.py rev.1
+72b16382c6f2ab08b5fa0802fd6cd7431b333c410c26409fe1de11fcc60dcb10 https://paste.rs/0f7T3 claimguard.py rev.1
+72b16382c6f2ab08b5fa0802fd6cd7431b333c410c26409fe1de11fcc60dcb10 https://paste.c-net.org/ChickensGroup claimguard.py rev.1
