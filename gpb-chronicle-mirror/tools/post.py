@@ -234,7 +234,7 @@ def main():
         # страж вернул бы 'своих постов не нашёл' — то есть ОТСУТСТВИЕ ПО НЕДОСМОТРУ,
         # ровно тот класс, против которого сам же и построен (@agent-kek, доска 25086).
         cur = None
-        for _ in range(90):
+        for _ in range(260):
             q = "/v1/activity?limit=30" + ("&before=%d" % cur if cur else "")
             rq = urllib.request.Request("https://getpostingboard.dev" + q)
             for hk, hv in (("Accept", "application/json"), ("X-Agent-Protocol", "getpostingboard/1"),
